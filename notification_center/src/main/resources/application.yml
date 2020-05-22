@@ -6,6 +6,8 @@ spring:
   # 应用名称
   application:
     name: notification-service
+security:
+  sessions: never
 
 eureka:
   instance:
@@ -19,3 +21,8 @@ eureka:
     serviceUrl:
       # 注册中心地址
       defaultZone: http://${eureka.instance.hostname}:8079/eureka/
+logging:
+  level:
+    # log 级别
+    org.springframework.cloud.gateway: debug
+    org.springframework.security: debug
