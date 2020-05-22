@@ -1,12 +1,10 @@
+# 端口
 server:
-  port: 8081
+  port: 8079
+# 应用名称
 spring:
-  session:
-    store-type: redis
-  # 应用名称
   application:
-    name: notification-service
-
+    name: eureka-server
 eureka:
   instance:
     # 使用 ip 代替实例名
@@ -16,6 +14,10 @@ eureka:
     # 实例的 ID 规则
     instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
   client:
+    # 是否向注册中心注册自己
+    registerWithEureka: false
+    # 是否向注册中心获取注册信息
+    fetchRegistry: false
     serviceUrl:
       # 注册中心地址
-      defaultZone: http://${eureka.instance.hostname}:8079/eureka/
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
