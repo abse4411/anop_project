@@ -35,5 +35,10 @@ public class AuthServerApplication {
     public Object failed() {
         return JsonResult.unauthorized("用户名或者密码错误", null);
     }
+
+    @PostMapping(path = "/test")
+    public Object test() {
+        return JsonResult.noContent().build();
+    }
 }
 

@@ -24,7 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .httpBasic().disable()
             .authorizeRequests()
-            .antMatchers(HttpMethod.POST, VALID_EMAIL_URL).permitAll()
             .anyRequest().authenticated()
             .and()
             .cors()
