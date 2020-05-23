@@ -1,4 +1,5 @@
 package com.anop;
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,16 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.security.Principal;
 import java.util.*;
 
+/**
+ * 通知微服务启动类
+ *
+ * @author Xue_Feng
+ */
 @SpringBootApplication
+@EnableEurekaClient
 @EnableDiscoveryClient
+@MapperScan("com.anop.mapper")
 @RestController
-@RibbonClient("AUTH-SERVICE")
 public class NotificationCenterApplication {
     private static final Logger logger= LoggerFactory.getLogger(NotificationCenterApplication.class);
 
@@ -51,6 +58,7 @@ public class NotificationCenterApplication {
     public Message user(Principal principal) {
         return new Message(principal.getName());
     }
+
     @PostMapping("/test")
     public Message test(Principal principal) {
         return new Message(principal.getName());
@@ -66,8 +74,7 @@ public class NotificationCenterApplication {
         List<String> cookies = new ArrayList<>();
         Cookie[] cc = request.getCookies();
         HashMap<String, Object> body = new HashMap<>();
-        for (int i = 0; i < cc.length; i++)
-        {
+        for (int i = 0; i < cc.length; i++) {
             cookies.add(cc[i].getName() + "=" + cc[i].getValue());
             System.out.println(cc[i].getName() + "=" + cc[i].getValue());
             if(cc[i].getName().equals("XSRF-TOKEN")){
@@ -87,9 +94,8 @@ public class NotificationCenterApplication {
             entity=new ResponseEntity<>(e.getResponseBodyAsString(), e.getResponseHeaders(),e.getStatusCode());
             e.printStackTrace();
             logger.warn(e.getMessage());
-        }finally {
-            return entity;
         }
+        return entity;
     }
 
     @Bean
@@ -97,8 +103,6 @@ public class NotificationCenterApplication {
     public RestTemplate restTemplate(RestTemplateBuilder builder){
         return builder.build();
     }
-
-
 
 
     class Message {

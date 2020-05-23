@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @SpringBootApplication
 @EnableEurekaClient
 @RestController
-@MapperScan("com.anop.security.mapper")
+@MapperScan("com.anop.mapper.security")
 public class AuthServerApplication {
 
     public static void main(String[] args) {

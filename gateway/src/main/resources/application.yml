@@ -26,18 +26,18 @@ spring:
           enabled: true
       # 路由（routes：路由，它由唯一标识（ID）、目标服务地址（uri）、一组断言（predicates）和一组过滤器组成（filters）。filters 不是必需参数。）
       routes:
-        # 路由标识（id：标识，具有唯一性）   简单尝试
+        # 路由标识（id：标识，具有唯一性）
         - id: noti-router
           # 目标服务地址（uri：地址，请求转发后的地址）
           uri: http://localhost:8081
           # 路由条件（predicates：断言，匹配 HTTP 请求内容）
           predicates:
-            - Path=/v1/noti/**
+            - Path=/v1/not/**
           filters:
             - StripPrefix=2
             - PreserveHostHeader
             - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-        # 路由标识（id：标识，具有唯一性）   简单尝试
+        # 路由标识（id：标识，具有唯一性）
         - id: auth-router
           # 目标服务地址（uri：地址，请求转发后的地址）
           uri: http://localhost:8078
@@ -45,6 +45,28 @@ spring:
           predicates:
             - Path=/login,/logout
           filters:
+            - PreserveHostHeader
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        # 路由标识（id：标识，具有唯一性）
+        - id: user-router
+          # 目标服务地址（uri：地址，请求转发后的地址）
+          uri: http://localhost:8082
+          # 路由条件（predicates：断言，匹配 HTTP 请求内容）
+          predicates:
+            - Path=/v1/usr/**
+          filters:
+            - StripPrefix=2
+            - PreserveHostHeader
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        # 路由标识（id：标识，具有唯一性）
+        - id: todo-router
+          # 目标服务地址（uri：地址，请求转发后的地址）
+          uri: http://localhost:8083
+          # 路由条件（predicates：断言，匹配 HTTP 请求内容）
+          predicates:
+            - Path=/v1/tod/**
+          filters:
+            - StripPrefix=2
             - PreserveHostHeader
             - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 eureka:

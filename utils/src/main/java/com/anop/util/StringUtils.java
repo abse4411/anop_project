@@ -1,18 +1,16 @@
 package com.anop.util;
 
+/**
+ * String检查帮助工具
+ *
+ * @author Xue_Feng
+ */
 public class StringUtils {
-    public static boolean isNullOrWhiteSpace(String str){
-        if(str==null){
-            return true;
-        }
-        str=str.trim();
-        return str.length()==0;
+    public static boolean isNullOrWhiteSpace(String s) {
+        return s == null || s.trim().length() == 0;
     }
 
-    public static boolean isNullOEmpty(String str){
-        if(str==null){
-            return true;
-        }
-        return str.length()==0;
+    public static boolean isNullOrEmpty(String s) {
+        return s == null || s.length() == 0;
     }
 }
