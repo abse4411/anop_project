@@ -14,8 +14,9 @@ spring:
   cloud:
     gateway:
       globalcors:
-        corsConfigurations:
-          '[/**]': # 匹配所有请求
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
@@ -34,16 +35,18 @@ spring:
             - Path=/v1/noti/**
           filters:
             - StripPrefix=2
+            - PreserveHostHeader
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
         # 路由标识（id：标识，具有唯一性）   简单尝试
         - id: auth-router
           # 目标服务地址（uri：地址，请求转发后的地址）
           uri: http://localhost:8078
           # 路由条件（predicates：断言，匹配 HTTP 请求内容）
           predicates:
-            - Path=/v1/auth/**
+            - Path=/login,/logout
           filters:
-            - StripPrefix=2
-#            - RedirectTo=302, http://localhost:8080/v1/auth/login
+            - PreserveHostHeader
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 eureka:
   instance:
     # 使用 ip 代替实例名

@@ -23,5 +23,4 @@ eureka:
 logging:
   level:
     # log 级别
-    org.springframework.cloud.gateway: debug
     org.springframework.security: debug
