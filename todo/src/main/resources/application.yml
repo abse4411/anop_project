@@ -1,12 +1,27 @@
 server:
   port: 8083
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    time-zone: GMT+8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/anop?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password:
   session:
     store-type: redis
   # 应用名称
   application:
     name: todo-service
-
+#Mybatis配置
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    #sql语句打印
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations:
+    - classpath:mybatis/mapper/*.xml
 eureka:
   instance:
     # 使用 ip 代替实例名
