@@ -140,15 +140,15 @@ public class NotificationCenterApplication {
 
     @GetMapping("/hello3")
     public Object hello3() {
-        String result = null;
-        result = remoteService.hello("你好");
+        Object result = null;
+        result = remoteService.hello3("null");
         return "Hello world!-NotificationCenterApplication" + result;
     }
 
     @GetMapping("/hello4")
     public Object hello4() {
-        String result = null;
-        result = remoteService.hello(null);
+        Object result = null;
+        result = remoteService.hello4("anull");
         return "Hello world!-NotificationCenterApplication" + result;
     }
 }

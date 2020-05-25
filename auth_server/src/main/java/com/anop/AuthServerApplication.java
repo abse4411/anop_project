@@ -1,14 +1,20 @@
 package com.anop;
 
+import com.anop.pojo.security.User;
 import com.anop.util.JsonResult;
 import com.anop.util.StringUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @SpringBootApplication
 @EnableEurekaClient
@@ -21,8 +27,17 @@ public class AuthServerApplication {
     }
 
     @GetMapping("/hello3")
-    public String hello(@RequestParam(name = "name") String name) {
-        return "Hello" + name + "world!-AuthApplication";
+    public ResponseEntity<String> hello(@RequestParam(name = "name") String name) {
+        return JsonResult.ok("Hello" + name + "world!-AuthApplication");
+
+    }
+
+    @PostMapping("/hello4")
+    public Object hello2(@RequestBody() @Valid @NotNull String name, BindingResult bindingResult) {
+        if (bindingResult.hasErrors() || bindingResult.hasFieldErrors()) {
+            return "Error";
+        }
+        return JsonResult.ok(new User());
     }
 
     @RequestMapping(path = "/user", method = {RequestMethod.GET, RequestMethod.POST})

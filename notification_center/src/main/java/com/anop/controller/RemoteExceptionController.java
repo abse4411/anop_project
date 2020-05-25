@@ -1,6 +1,7 @@
 package com.anop.controller;
 
 import com.anop.NotificationCenterApplication;
+import com.anop.util.JsonResult;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,12 @@ public class RemoteExceptionController {
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity feignExceptionHandler(FeignException e) {
-        ResponseEntity<String> entity = new ResponseEntity(e.contentUTF8(), HttpStatus.valueOf(e.status()));
         logger.error(e.getMessage());
         e.printStackTrace();
-        return entity;
+        if (e.status() > 0) {
+            return new ResponseEntity<>(e.contentUTF8(), HttpStatus.valueOf(e.status()));
+        } else {
+            return new ResponseEntity<>(JsonResult.internalServerError(e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
