@@ -32,7 +32,7 @@ public class SwaggerConfig {
             .apiInfo(apiInfo())
             .select()
             //扫描basePackage包下面的“/rest/”路径下的内容作为接口文档构建的目标
-            .apis(RequestHandlerSelectors.basePackage("edu.fzu.anop.controller"))
+            .apis(RequestHandlerSelectors.basePackage("com.anop.Controller"))
             .paths(PathSelectors.regex("/.*"))
             .build();
     }
