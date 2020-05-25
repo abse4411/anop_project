@@ -27,8 +27,8 @@ public class AuthServerApplication {
     }
 
     @GetMapping("/hello3")
-    public ResponseEntity<String> hello(@RequestParam(name = "name") String name) {
-        return JsonResult.ok("Hello" + name + "world!-AuthApplication");
+    public JsonResult hello(@RequestParam(name = "name") String name) {
+        return JsonResult.notFound("Hello" + name + "world!-AuthApplication", null);
 
     }
 

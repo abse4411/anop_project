@@ -1,18 +1,20 @@
 package com.anop.controller;
 
-import com.anop.NotificationCenterApplication;
+import com.anop.util.BindingResultUtils;
 import com.anop.util.JsonResult;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
-public class RemoteExceptionController {
-    private static final Logger logger = LoggerFactory.getLogger(RemoteExceptionController.class);
+@RestControllerAdvice
+public class GlobalExceptionController {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionController.class);
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity feignExceptionHandler(FeignException e) {
@@ -23,5 +25,12 @@ public class RemoteExceptionController {
         } else {
             return new ResponseEntity<>(JsonResult.internalServerError(e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @ExceptionHandler(BindException.class)
+    public JsonResult bindingExceptionHandler(BindException e, BindingResult bindingResult) {
+        logger.error(e.getMessage());
+        e.printStackTrace();
+        return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
     }
 }

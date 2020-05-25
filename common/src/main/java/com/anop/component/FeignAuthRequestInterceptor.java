@@ -9,7 +9,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FeignAuthRequestInterceptor implements RequestInterceptor {
     private static final String XSRF_TOKEN_HEADER_NAME = "X-XSRF-TOKEN";
