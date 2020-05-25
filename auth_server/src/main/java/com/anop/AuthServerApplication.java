@@ -21,8 +21,8 @@ public class AuthServerApplication {
     }
 
     @GetMapping("/hello3")
-    public String hello(){
-        return "Hello world!-GatewayApplication";
+    public String hello(@RequestParam(name = "name") String name) {
+        return "Hello" + name + "world!-AuthApplication";
     }
 
     @RequestMapping(path = "/user", method = {RequestMethod.GET, RequestMethod.POST})

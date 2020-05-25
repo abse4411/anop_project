@@ -1,4 +1,6 @@
 package com.anop;
+import com.anop.service.RemoteService;
+import feign.FeignException;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,11 +12,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +28,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import java.net.HttpRetryException;
 import java.security.Principal;
 import java.util.*;
 
@@ -39,6 +40,7 @@ import java.util.*;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableDiscoveryClient
+@EnableFeignClients
 @MapperScan("com.anop.mapper")
 @RestController
 public class NotificationCenterApplication {
@@ -131,6 +133,23 @@ public class NotificationCenterApplication {
         public void setContent(String content) {
             this.content = content;
         }
+    }
+
+    @Autowired
+    RemoteService remoteService;
+
+    @GetMapping("/hello3")
+    public Object hello3() {
+        String result = null;
+        result = remoteService.hello("你好");
+        return "Hello world!-NotificationCenterApplication" + result;
+    }
+
+    @GetMapping("/hello4")
+    public Object hello4() {
+        String result = null;
+        result = remoteService.hello(null);
+        return "Hello world!-NotificationCenterApplication" + result;
     }
 }
 
