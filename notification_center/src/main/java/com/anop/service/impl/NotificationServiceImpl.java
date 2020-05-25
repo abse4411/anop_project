@@ -1,5 +1,6 @@
 package com.anop.service.impl;
 
+import com.anop.service.*;
 import com.github.pagehelper.PageInfo;
 import com.anop.mapper.CustomNotificationMapper;
 import com.anop.mapper.NotificationMapper;
@@ -9,10 +10,6 @@ import com.anop.pojo.Receiver;
 import com.anop.pojo.example.ReceiverExample;
 import com.anop.resource.*;
 import com.anop.pojo.security.User;
-import com.anop.service.GroupAuthService;
-import com.anop.service.GroupUserService;
-import com.anop.service.NotificationService;
-import com.anop.service.TodoService;
 import com.anop.util.PageSortHelper;
 import com.anop.util.PropertyMapperUtils;
 import com.anop.util.SecurityUtils;
@@ -45,8 +42,8 @@ public class NotificationServiceImpl implements NotificationService {
     GroupUserService groupUserService;
     @Autowired
     GroupAuthService authService;
-//    @Autowired
-//    TodoService todoService;
+    @Autowired
+    TodoRemoteService todoService;
 
     @Override
     public boolean isInGroup(int notificationId, int groupId) {
@@ -162,15 +159,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public int asTodo(Notification notification) {
-//        if (!authService.canTurnNotificationIntoTodo(notification.getGroupId())) {
-//            return -1;
-//        }
-//        TodoAddResource resource = new TodoAddResource();
-//        resource.setTitle(notification.getTitle());
-//        resource.setContent(notification.getContent());
-//        resource.setIsFavorite(NOT_FAVORITE);
-//        resource.setIsImportant(NOT_IMPORTANT);
-//        return todoService.addTodo(resource) != null ? 1 : 0;
-        return 0;
+        if (!authService.canTurnNotificationIntoTodo(notification.getGroupId())) {
+            return -1;
+        }
+        TodoAddResource resource = new TodoAddResource();
+        resource.setTitle(notification.getTitle().substring(0, 15));
+        resource.setContent(notification.getContent());
+        resource.setIsFavorite(NOT_FAVORITE);
+        resource.setIsImportant(NOT_IMPORTANT);
+        return todoService.addTodo(resource) != null ? 1 : 0;
     }
 }

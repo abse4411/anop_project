@@ -18,7 +18,7 @@ public class RemoteExceptionController {
     public ResponseEntity feignExceptionHandler(FeignException e) {
         logger.error(e.getMessage());
         e.printStackTrace();
-        if (e.status() > 0) {
+        if (HttpStatus.resolve(e.status()) != null) {
             return new ResponseEntity<>(e.contentUTF8(), HttpStatus.valueOf(e.status()));
         } else {
             return new ResponseEntity<>(JsonResult.internalServerError(e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
