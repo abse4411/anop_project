@@ -36,10 +36,7 @@ public class SubscriberGroupController {
         @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
     })
     @GetMapping()
-    public Object getGroups(@Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getGroups(@Valid PageParmResource page) {
         return JsonResult.ok(groupService.listUserSubscribeGroupInfo(page));
     }
 
@@ -56,11 +53,11 @@ public class SubscriberGroupController {
     public Object getGroupUnreadNotificationCount(@PathVariable("id") int groupId) {
         Group group = groupService.getGroup(groupId);
         if (group == null) {
-            return JsonResult.notFound("group was not found", null);
+            return JsonResult.notFound("通知群组不存在", null);
         }
         GroupUnreadNotificationCountResource resource = notificationService.countGroupUnreadNotification(groupId);
         if (resource == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的普通成员才可以群组的未读通知数", null);
         }
         return JsonResult.ok(resource);
     }
@@ -78,11 +75,11 @@ public class SubscriberGroupController {
     public Object quitGroup(@PathVariable("id") int groupId) {
         Group group = groupService.getGroup(groupId);
         if (group == null) {
-            return JsonResult.notFound("group was not found", null);
+            return JsonResult.notFound("通知群组不存在", null);
         }
         int result = groupService.quitGroup(group);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的成员才可以取消订阅", null);
         }
         return JsonResult.noContent().build();
     }

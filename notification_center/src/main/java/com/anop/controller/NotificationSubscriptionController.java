@@ -45,11 +45,11 @@ public class NotificationSubscriptionController {
     public Object getNotification(@PathVariable("gid") int groupId, @PathVariable("nid") int notificationId) {
         Notification notification = notificationService.getNotification(notificationId, groupId);
         if (notification == null) {
-            return JsonResult.notFound("notification was not found", null);
+            return JsonResult.notFound("通知不存在", null);
         }
         ReceiverNotificationResource notificationInfo = notificationService.getReceiverNotification(notificationId, groupId);
         if (notificationInfo == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的普通成员才可以获取通知的订阅信息", null);
         }
         return notificationInfo;
     }
@@ -66,14 +66,10 @@ public class NotificationSubscriptionController {
     @GetMapping()
     public Object getNotifications(
         @Valid PageParmResource page,
-        BindingResult bindingResult,
         @PathVariable("gid") int groupId) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         PageInfo<List<ReceiverNotificationResource>> listPageInfo = notificationService.listReceiverNotification(page, groupId);
         if (listPageInfo == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的普通成员才可以获取通知的订阅信息", null);
         }
         return JsonResult.ok(listPageInfo);
     }

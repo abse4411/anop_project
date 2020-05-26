@@ -41,7 +41,7 @@ public class ReceiverController {
         resource.setNotificationId(notificationId);
         int result = receiverService.addReceiver(resource);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的普通成员才可以对通知执行已读操作", null);
         }
         return JsonResult.ok().build();
     }
