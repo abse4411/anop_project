@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 
+@Api(value = "用户信息", tags = "用户信息")
 @RestController
 public class UserInfoController {
 

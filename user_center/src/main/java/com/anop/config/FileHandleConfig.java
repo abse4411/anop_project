@@ -7,20 +7,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class FileHandleConfig implements WebMvcConfigurer {
 
-    private static final String AVATAR_UPLOAD_PATH = "/src/main/resources/static/avatarimg/";
+    private static final String RESOURCE_UPLOAD_PATH = "/src/main/resources/static/";
     private static final String SERVICE_ADDRESS = "localhost:8082/";
-    public static final String AVATAR_SAVE_PATH = SERVICE_ADDRESS + "avatarimg/";
+    public static final String AVATAR_GET_PATH = SERVICE_ADDRESS + "avatarimg/";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+
+        String absolutePath = System.getProperty("user.dir") + "/user_center" + RESOURCE_UPLOAD_PATH;
+        registry.addResourceHandler("/**").addResourceLocations("File:" + absolutePath);
         registry.addResourceHandler("swagger-ui.html").addResourceLocations(
                 "classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations(
                 "classpath:/META-INF/resources/webjars/");
     }
 
-    public static String getUploadPath() {
-        return System.getProperty("user.dir") + AVATAR_UPLOAD_PATH;
+    public static String getImageUploadPath() {
+        return System.getProperty("user.dir") + "/user_center" + RESOURCE_UPLOAD_PATH + "/avatarimg/";
     }
+
 }
