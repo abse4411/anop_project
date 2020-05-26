@@ -182,4 +182,17 @@ public class TodoController {
         }
         return JsonResult.ok(todoService.addTodos(resource));
     }
+
+    @ApiOperation(value = "搜索满足条件的待办事项", notes = "获取历史待办事项列表")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功获取", response = PageInfo.class),
+            @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
+    })
+    @PostMapping("/search")
+    public Object searchTodos(@RequestParam String title, @Valid PageParmResource page, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
+        }
+        return JsonResult.ok(todoService.searchTodosLike(title, page));
+    }
 }

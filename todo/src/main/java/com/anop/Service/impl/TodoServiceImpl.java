@@ -159,6 +159,18 @@ public class TodoServiceImpl implements TodoService {
         Todo newTodo = new Todo();
         newTodo.setTitle(resource.getTitle());
         newTodo.setContent(resource.getContent());
-        return customTodoMapper.insertBatch(resource.getUserIds(),newTodo);
+        return customTodoMapper.insertBatch(resource.getUserIds(), newTodo);
+    }
+
+    @Override
+    public PageInfo<List<Todo>> searchTodosLike(String title, PageParmResource page) {
+        TodoExample todoExample = new TodoExample();
+        TodoExample.Criteria criteria = todoExample.createCriteria();
+        criteria.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId())
+                .andTitleLike("%" + title + "%");
+
+        PageSortHelper.pageAndSort(page, TodoResource.class);
+        List<Todo> todos = todoMapper.selectByExample(todoExample);
+        return new PageInfo(todos);
     }
 }

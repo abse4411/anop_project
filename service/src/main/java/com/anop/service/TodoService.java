@@ -76,4 +76,13 @@ public interface TodoService {
      * @return 插入的条数
      */
     int addTodos(TodoBatchAddResource resource);
+
+    /**
+     * 按标题模糊搜索待办
+     *
+     * @param title 标题
+     * @param page 分页参数
+     * @return 指定分页的历史待办列表
+     */
+    PageInfo<List<Todo>> searchTodosLike(String title, PageParmResource page);
 }
