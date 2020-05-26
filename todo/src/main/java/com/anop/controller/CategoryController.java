@@ -1,4 +1,4 @@
-package com.anop.Controller;
+package com.anop.controller;
 
 import com.anop.pojo.Category;
 import com.anop.pojo.security.User;
