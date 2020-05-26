@@ -14,4 +14,17 @@
           AND `todo`.`remind_date` &gt; (date_sub(now(), interval 1 hour));
     </select>
 
+    <insert id="insertBatch">
+        INSERT INTO todo (
+        user_id,
+        title,
+        content)
+        VALUES
+        <foreach collection="userIds" item="userId" index="index" separator=",">
+            (#{userId},
+            #{record.title},
+            #{record.content})
+        </foreach>
+    </insert>
+
 </mapper>
