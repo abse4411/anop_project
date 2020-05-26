@@ -42,7 +42,7 @@ public class NotificationController {
         @PathVariable("gid") int groupId) {
         int result = notificationService.addNotification(resource, groupId);
         if (result == -1) {
-            return JsonResult.forbidden("通知群组的群主或管理员才可以发布通知", null);
+            return JsonResult.forbidden("通知群组的创建者或管理员才可以发布通知", null);
         }
         return JsonResult.ok().build();
     }
@@ -113,7 +113,7 @@ public class NotificationController {
         }
         int result = notificationService.updateNotification(notification, resource);
         if (result == -1) {
-            return JsonResult.forbidden("通知群组的群主或管理员才可以编辑通知", null);
+            return JsonResult.forbidden("通知群组的创建者或管理员才可以编辑通知", null);
         }
         return JsonResult.noContent().build();
     }
@@ -136,7 +136,7 @@ public class NotificationController {
         }
         int result = notificationService.deleteNotification(notification);
         if (result == -1) {
-            return JsonResult.forbidden("通知群组的群主或管理员才可以删除通知", null);
+            return JsonResult.forbidden("通知群组的创建者或管理员才可以删除通知", null);
         }
         return JsonResult.noContent().build();
     }
@@ -154,7 +154,7 @@ public class NotificationController {
     public Object getReaders(@PathVariable("gid") int groupId, @PathVariable("nid") int notificationId) {
         List<ReceiverResource> resources = receiverService.listReceiver(notificationId, groupId);
         if (resources == null) {
-            return JsonResult.forbidden("通知群组的群主或管理员才可以获取通知已读未读成员信息", null);
+            return JsonResult.forbidden("通知群组的创建者或管理员才可以获取通知已读未读成员信息", null);
         }
         return JsonResult.ok(resources);
     }

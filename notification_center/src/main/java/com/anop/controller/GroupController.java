@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
@@ -112,9 +111,9 @@ public class GroupController {
         @ApiImplicitParam(name = "id", value = "通知群组群号", required = true, dataType = "int"),
     })
     @ApiResponses({
-        @ApiResponse(code = 204, message = "删除成功"),
+        @ApiResponse(code = 204, message = "解散成功"),
         @ApiResponse(code = 404, message = "通知群组不存在", response = Message.class),
-        @ApiResponse(code = 403, message = "用户不是通知群组的创建者或者管理员", response = Message.class)
+        @ApiResponse(code = 403, message = "用户不是通知群组的创建者", response = Message.class)
     })
     @DeleteMapping("/{id}")
     public Object deleteGroup(@PathVariable("id") int id) {
@@ -124,7 +123,7 @@ public class GroupController {
         }
         int result = groupService.deleteGroup(group);
         if (result == -1) {
-            return JsonResult.forbidden("通知群组的创建者或者管理员才可以解散群", null);
+            return JsonResult.forbidden("通知群组的创建者才可以解散群", null);
         }
         return JsonResult.noContent().build();
     }

@@ -93,7 +93,7 @@ public class GroupUserController {
         }
         int result = groupUserService.updateGroupUserRole(groupUser, resource);
         if (result == -1) {
-            return JsonResult.forbidden("通知群组的群主才可以改变成员权限", null);
+            return JsonResult.forbidden("通知群组的创建者才可以改变成员权限", null);
         }
         return JsonResult.noContent().build();
     }
@@ -116,7 +116,7 @@ public class GroupUserController {
         }
         int result = groupUserService.deleteGroupUser(groupUser);
         if (result == -1) {
-            return JsonResult.forbidden("通知群组的群主或管理员才可以踢出成员", null);
+            return JsonResult.forbidden("通知群组的创建者或管理员才可以踢出成员", null);
         }
         return JsonResult.noContent().build();
     }

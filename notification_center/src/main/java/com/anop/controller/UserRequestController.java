@@ -104,7 +104,7 @@ public class UserRequestController {
                     errorMsg = "加入申请已被处理";
                     break;
                 case -2:
-                    errorMsg = "通知群组的群主或管理员才可以审核加入申请";
+                    errorMsg = "通知群组的创建者或管理员才可以审核加入申请";
                     break;
                 case -3:
                     errorMsg = "申请者已在将在该通知群组中";
