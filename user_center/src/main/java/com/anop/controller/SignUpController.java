@@ -19,6 +19,7 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.Date;
 
+@Api(value = "用户注册", tags = "用户注册")
 @RestController
 public class SignUpController {
 
@@ -59,11 +60,7 @@ public class SignUpController {
     })
     @ApiResponses({
             @ApiResponse(code = 204, message = "注册成功", response = Message.class),
-            @ApiResponse(code = 400, message = "邮箱未验证", response = Message.class),
-            @ApiResponse(code = 400, message = "邮箱已被注册", response = Message.class),
-            @ApiResponse(code = 400, message = "用户名已被使用", response = Message.class),
-            @ApiResponse(code = 400, message = "验证码过期", response = Message.class),
-            @ApiResponse(code = 400, message = "验证码错误", response = Message.class),
+            @ApiResponse(code = 400, message = "邮箱未验证/邮箱已被注册/用户名已被使用/验证码过期/验证码错误", response = Message.class),
             @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class)
     })
     @PostMapping("signup")

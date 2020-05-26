@@ -61,12 +61,12 @@ public class UserInfoServiceImpl implements UserInfoService {
         String suffix = fileName.substring(fileName.lastIndexOf("."));
         String MD5Name = DigestUtils.md5DigestAsHex(file.getBytes());
 
-        File newFile = new File(FileHandleConfig.getUploadPath() + MD5Name + suffix);
+        File newFile = new File(FileHandleConfig.getImageUploadPath() + MD5Name + suffix);
         if(newFile.exists() == false) {
             file.transferTo(newFile);
         }
 
-        return FileHandleConfig.AVATAR_SAVE_PATH + newFile.getName();
+        return FileHandleConfig.AVATAR_GET_PATH + newFile.getName();
     }
 
     @Override
