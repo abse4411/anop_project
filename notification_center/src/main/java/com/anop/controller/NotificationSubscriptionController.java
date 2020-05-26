@@ -66,11 +66,7 @@ public class NotificationSubscriptionController {
     @GetMapping()
     public Object getNotifications(
         @Valid PageParmResource page,
-        BindingResult bindingResult,
         @PathVariable("gid") int groupId) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         PageInfo<List<ReceiverNotificationResource>> listPageInfo = notificationService.listReceiverNotification(page, groupId);
         if (listPageInfo == null) {
             return JsonResult.forbidden(null, null);

@@ -36,11 +36,7 @@ public class UserRequestController {
     })
     @PostMapping()
     public Object addUserRequest(
-        @RequestBody @Valid UserRequestAddResource resource,
-        BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+        @RequestBody @Valid UserRequestAddResource resource) {
         int result = userRequestService.addUserRequest(resource);
         if (result == -1) {
             return JsonResult.forbidden(null, null);
@@ -54,10 +50,7 @@ public class UserRequestController {
         @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
     })
     @GetMapping()
-    public Object getUserRequests(@Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getUserRequests(@Valid PageParmResource page) {
         return JsonResult.ok(userRequestService.listUserRequest(page));
     }
 
@@ -67,10 +60,7 @@ public class UserRequestController {
         @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
     })
     @GetMapping("/manage")
-    public Object getManageUserRequests(@Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getManageUserRequests(@Valid PageParmResource page) {
         return JsonResult.ok(userRequestService.listManageUserRequest(page));
     }
 
@@ -87,11 +77,7 @@ public class UserRequestController {
     @PostMapping("/{id}")
     public Object acceptOrDenyUserRequest(
         @RequestBody @Valid UserRequestUpdateResource resource,
-        BindingResult bindingResult,
         @PathVariable("id") int id) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         UserRequest request = userRequestService.getUserRequest(id);
         if (request == null) {
             return JsonResult.notFound("user request was not found", null);

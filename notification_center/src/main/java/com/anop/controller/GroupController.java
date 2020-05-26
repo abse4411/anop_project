@@ -1,18 +1,16 @@
 package com.anop.controller;
 
-import com.github.pagehelper.PageInfo;
 import com.anop.pojo.Group;
 import com.anop.resource.GroupAddResource;
 import com.anop.resource.GroupResource;
 import com.anop.resource.GroupUpdateResource;
 import com.anop.resource.PageParmResource;
 import com.anop.service.GroupService;
-import com.anop.util.BindingResultUtils;
 import com.anop.util.JsonResult;
 import com.anop.util.Message;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,10 +39,7 @@ public class GroupController {
     })
     @PostMapping()
     public Object addGroup(
-        @RequestBody @Valid GroupAddResource resource, BindingResult bindingResult) throws URISyntaxException {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+        @RequestBody @Valid GroupAddResource resource) throws URISyntaxException {
         Group group = groupService.addGroup(resource);
         return JsonResult.created(new URI("http://localhost:8080/v1/pub/groups/" + group.getId())).body(group);
     }
@@ -72,10 +67,7 @@ public class GroupController {
         @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
     })
     @GetMapping()
-    public Object getCreateGroups(@Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getCreateGroups(@Valid PageParmResource page) {
         return JsonResult.ok(groupService.listUserCreateGroupInfo(page));
     }
 
@@ -85,10 +77,7 @@ public class GroupController {
         @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
     })
     @GetMapping("/manage")
-    public Object getManageGroups(@Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getManageGroups(@Valid PageParmResource page) {
         return JsonResult.ok(groupService.listUserManageGroupInfo(page));
     }
 
@@ -105,11 +94,7 @@ public class GroupController {
     @PatchMapping("/{id}")
     public Object updateGroup(
         @RequestBody @Valid GroupUpdateResource resource,
-        BindingResult bindingResult,
         @PathVariable("id") int id) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         Group group = groupService.getGroup(id);
         if (group == null) {
             return JsonResult.notFound("group was not found", null);

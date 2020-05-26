@@ -63,11 +63,7 @@ public class GroupUserController {
     @GetMapping()
     public Object getGroupUsers(
         @Valid PageParmResource page,
-        BindingResult bindingResult,
         @PathVariable("gid") int groupId) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         PageInfo<List<GroupUserResource>> listPageInfo = groupUserService.listGroupUser(page, groupId);
         if (listPageInfo == null) {
             return JsonResult.forbidden(null, null);
@@ -89,12 +85,8 @@ public class GroupUserController {
     @PatchMapping("/{uid}")
     public Object updateGroupUserRole(
         @RequestBody @Valid GroupUserUpdateResource resource,
-        BindingResult bindingResult,
         @PathVariable("gid") int groupId,
         @PathVariable("uid") int userId) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         GroupUser groupUser = groupUserService.getGroupUser(userId, groupId);
         if (groupUser == null) {
             return JsonResult.notFound("groupUser was not found", null);

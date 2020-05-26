@@ -39,11 +39,7 @@ public class NotificationController {
     @PostMapping
     public Object addNotification(
         @RequestBody @Valid NotificationAddResource resource,
-        BindingResult bindingResult,
         @PathVariable("gid") int groupId) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         int result = notificationService.addNotification(resource, groupId);
         if (result == -1) {
             return JsonResult.forbidden(null, null);
@@ -87,11 +83,7 @@ public class NotificationController {
     @GetMapping()
     public Object getNotifications(
         @Valid PageParmResource page,
-        BindingResult bindingResult,
         @PathVariable("gid") int groupId) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         PageInfo<List<NotificationResource>> listPageInfo = notificationService.listNotificationInfo(page, groupId);
         if (listPageInfo == null) {
             return JsonResult.forbidden(null, null);
@@ -113,12 +105,8 @@ public class NotificationController {
     @PatchMapping("/{nid}")
     public Object updateNotification(
         @RequestBody @Valid NotificationUpdateResource resource,
-        BindingResult bindingResult,
         @PathVariable("gid") int groupId,
         @PathVariable("nid") int notificationId) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
         Notification notification = notificationService.getNotification(notificationId, groupId);
         if (notification == null) {
             return JsonResult.notFound("notification was not found", null);

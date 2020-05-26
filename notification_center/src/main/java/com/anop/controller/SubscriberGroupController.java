@@ -36,10 +36,7 @@ public class SubscriberGroupController {
         @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
     })
     @GetMapping()
-    public Object getGroups(@Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getGroups(@Valid PageParmResource page) {
         return JsonResult.ok(groupService.listUserSubscribeGroupInfo(page));
     }
 
