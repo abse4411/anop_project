@@ -7,6 +7,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
+/**
+ * 安全配置类
+ *
+ * @author Xue_Feng
+ */
 @Configuration
 @EnableRedisHttpSession
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

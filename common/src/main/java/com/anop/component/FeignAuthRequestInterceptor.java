@@ -12,6 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 微服务验证信息转发调用拦截器
+ *
+ * @author Xue_Feng
+ */
 public class FeignAuthRequestInterceptor implements RequestInterceptor {
     private static final String XSRF_TOKEN_HEADER_NAME = "X-XSRF-TOKEN";
     private static final String COOKIE_HEADER_NAME = "Cookie";
