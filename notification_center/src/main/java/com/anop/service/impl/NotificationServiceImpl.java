@@ -32,6 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
     private static final Byte UNREAD = 0;
     private static final Byte NOT_FAVORITE = 0;
     private static final Byte NOT_IMPORTANT = 0;
+    private static final int MAX_TODO_TITLE_LENGTH = 15;
     @Autowired
     NotificationMapper notificationMapper;
     @Autowired
@@ -163,7 +164,10 @@ public class NotificationServiceImpl implements NotificationService {
             return -1;
         }
         TodoAddResource resource = new TodoAddResource();
-        resource.setTitle(notification.getTitle().substring(0, 15));
+        if (notification.getTitle().length() > MAX_TODO_TITLE_LENGTH) {
+            notification.setTitle(notification.getTitle().substring(0, MAX_TODO_TITLE_LENGTH));
+        }
+        resource.setTitle(notification.getTitle());
         resource.setContent(notification.getContent());
         resource.setIsFavorite(NOT_FAVORITE);
         resource.setIsImportant(NOT_IMPORTANT);
