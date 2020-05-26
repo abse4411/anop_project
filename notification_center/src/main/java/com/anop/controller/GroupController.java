@@ -41,7 +41,7 @@ public class GroupController {
     public Object addGroup(
         @RequestBody @Valid GroupAddResource resource) throws URISyntaxException {
         Group group = groupService.addGroup(resource);
-        return JsonResult.created(new URI("http://localhost:8080/v1/pub/groups/" + group.getId())).body(group);
+        return JsonResult.noContent().build();
     }
 
     @ApiOperation(value = "获取一个通知群组")
@@ -56,7 +56,7 @@ public class GroupController {
     public Object getGroup(@PathVariable("id") int id) {
         GroupResource group = groupService.getGroupInfo(id);
         if (group == null) {
-            return JsonResult.notFound("group was not found", null);
+            return JsonResult.notFound("通知群组不存在", null);
         }
         return JsonResult.ok(group);
     }
@@ -89,7 +89,8 @@ public class GroupController {
     @ApiResponses({
         @ApiResponse(code = 204, message = "更新成功"),
         @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
-        @ApiResponse(code = 403, message = "用户不是通知群组的创建者或者管理员", response = Message.class)
+        @ApiResponse(code = 403, message = "用户不是通知群组的创建者或者管理员", response = Message.class),
+        @ApiResponse(code = 404, message = "通知群组不存在", response = Message.class),
     })
     @PatchMapping("/{id}")
     public Object updateGroup(
@@ -97,11 +98,11 @@ public class GroupController {
         @PathVariable("id") int id) {
         Group group = groupService.getGroup(id);
         if (group == null) {
-            return JsonResult.notFound("group was not found", null);
+            return JsonResult.notFound("通知群组不存在", null);
         }
         int result = groupService.updateGroup(group, resource);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的创建者或者管理员才可以更新群资料", null);
         }
         return JsonResult.noContent().build();
     }
@@ -119,11 +120,11 @@ public class GroupController {
     public Object deleteGroup(@PathVariable("id") int id) {
         Group group = groupService.getGroup(id);
         if (group == null) {
-            return JsonResult.notFound("group was not found", null);
+            return JsonResult.notFound("通知群组不存在", null);
         }
         int result = groupService.deleteGroup(group);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的创建者或者管理员才可以解散群", null);
         }
         return JsonResult.noContent().build();
     }

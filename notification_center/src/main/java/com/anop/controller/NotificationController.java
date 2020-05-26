@@ -42,7 +42,7 @@ public class NotificationController {
         @PathVariable("gid") int groupId) {
         int result = notificationService.addNotification(resource, groupId);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的群主或管理员才可以发布通知", null);
         }
         return JsonResult.ok().build();
     }
@@ -62,11 +62,11 @@ public class NotificationController {
     public Object getNotification(@PathVariable("gid") int groupId, @PathVariable("nid") int notificationId) {
         Notification notification = notificationService.getNotification(notificationId, groupId);
         if (notification == null) {
-            return JsonResult.notFound("notification was not found", null);
+            return JsonResult.notFound("通知不存在", null);
         }
         NotificationResource notificationInfo = notificationService.getNotificationInfo(notificationId, groupId);
         if (notificationInfo == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的成员才可以获取通知信息", null);
         }
         return notificationInfo;
     }
@@ -86,7 +86,7 @@ public class NotificationController {
         @PathVariable("gid") int groupId) {
         PageInfo<List<NotificationResource>> listPageInfo = notificationService.listNotificationInfo(page, groupId);
         if (listPageInfo == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的成员才可以获取通知信息", null);
         }
         return JsonResult.ok(listPageInfo);
     }
@@ -109,11 +109,11 @@ public class NotificationController {
         @PathVariable("nid") int notificationId) {
         Notification notification = notificationService.getNotification(notificationId, groupId);
         if (notification == null) {
-            return JsonResult.notFound("notification was not found", null);
+            return JsonResult.notFound("通知不存在", null);
         }
         int result = notificationService.updateNotification(notification, resource);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的群主或管理员才可以编辑通知", null);
         }
         return JsonResult.noContent().build();
     }
@@ -132,11 +132,11 @@ public class NotificationController {
     public Object deleteNotification(@PathVariable("gid") int groupId, @PathVariable("nid") int notificationId) {
         Notification notification = notificationService.getNotification(notificationId, groupId);
         if (notification == null) {
-            return JsonResult.notFound("notification was not found", null);
+            return JsonResult.notFound("通知不存在", null);
         }
         int result = notificationService.deleteNotification(notification);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的群主或管理员才可以删除通知", null);
         }
         return JsonResult.noContent().build();
     }
@@ -154,7 +154,7 @@ public class NotificationController {
     public Object getReaders(@PathVariable("gid") int groupId, @PathVariable("nid") int notificationId) {
         List<ReceiverResource> resources = receiverService.listReceiver(notificationId, groupId);
         if (resources == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的群主或管理员才可以获取通知已读未读成员信息", null);
         }
         return JsonResult.ok(resources);
     }
@@ -166,17 +166,18 @@ public class NotificationController {
     })
     @ApiResponses({
         @ApiResponse(code = 204, message = "转化成功", response = PageInfo.class),
-        @ApiResponse(code = 403, message = "用户没有权限", response = Message.class)
+        @ApiResponse(code = 403, message = "用户没有权限", response = Message.class),
+        @ApiResponse(code = 404, message = "通知不存在", response = Message.class)
     })
     @PostMapping("/{nid}/asTodo")
     public Object asTodo(@PathVariable("gid") int groupId, @PathVariable("nid") int notificationId) {
         Notification notification = notificationService.getNotification(notificationId, groupId);
         if (notification == null) {
-            return JsonResult.notFound("notification was not found", null);
+            return JsonResult.notFound("通知不存在", null);
         }
         int result = notificationService.asTodo(notification);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的普通成员才可以将通知转化为待办事项", null);
         }
         return JsonResult.noContent().build();
     }

@@ -42,11 +42,11 @@ public class GroupUserController {
     public Object getGroupUser(@PathVariable("gid") int groupId, @PathVariable("uid") int userId) {
         GroupUser groupUser = groupUserService.getGroupUser(userId, groupId);
         if (groupUser == null) {
-            return JsonResult.notFound("groupUser was not found", null);
+            return JsonResult.notFound("成员不存在", null);
         }
         GroupUserResource userResource = groupUserService.getGroupUserInfo(userId, groupId);
         if (userResource == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的成员才可以获取群内成员信息", null);
         }
         return JsonResult.ok(userResource);
     }
@@ -66,7 +66,7 @@ public class GroupUserController {
         @PathVariable("gid") int groupId) {
         PageInfo<List<GroupUserResource>> listPageInfo = groupUserService.listGroupUser(page, groupId);
         if (listPageInfo == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的成员才可以获取群内成员信息", null);
         }
         return JsonResult.ok(listPageInfo);
     }
@@ -89,11 +89,11 @@ public class GroupUserController {
         @PathVariable("uid") int userId) {
         GroupUser groupUser = groupUserService.getGroupUser(userId, groupId);
         if (groupUser == null) {
-            return JsonResult.notFound("groupUser was not found", null);
+            return JsonResult.notFound("成员不存在", null);
         }
         int result = groupUserService.updateGroupUserRole(groupUser, resource);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的群主才可以改变成员权限", null);
         }
         return JsonResult.noContent().build();
     }
@@ -112,11 +112,11 @@ public class GroupUserController {
     public Object deleteGroupUser(@PathVariable("gid") int groupId, @PathVariable("uid") int userId) {
         GroupUser groupUser = groupUserService.getGroupUser(userId, groupId);
         if (groupUser == null) {
-            return JsonResult.notFound("groupUser was not found", null);
+            return JsonResult.notFound("成员不存在", null);
         }
         int result = groupUserService.deleteGroupUser(groupUser);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的群主或管理员才可以踢出成员", null);
         }
         return JsonResult.noContent().build();
     }

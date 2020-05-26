@@ -8,8 +8,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
+/**
+ * 备忘录微服务调用类
+ *
+ * @author Xue_Feng
+ */
 @FeignClient(value = "TODO-SERVICE", configuration = FeignAuthRequestInterceptor.class)
 public interface TodoRemoteService {
+    /**
+     * 将指定通知转化为代办事项
+     *
+     * @param resource 待办事项添加参数
+     * @return 处理结果
+     */
     @PostMapping("/todos")
     String addTodo(@RequestBody @Valid TodoAddResource resource);
 }

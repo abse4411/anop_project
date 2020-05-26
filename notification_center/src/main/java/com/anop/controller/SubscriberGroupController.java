@@ -53,11 +53,11 @@ public class SubscriberGroupController {
     public Object getGroupUnreadNotificationCount(@PathVariable("id") int groupId) {
         Group group = groupService.getGroup(groupId);
         if (group == null) {
-            return JsonResult.notFound("group was not found", null);
+            return JsonResult.notFound("通知群组不存在", null);
         }
         GroupUnreadNotificationCountResource resource = notificationService.countGroupUnreadNotification(groupId);
         if (resource == null) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的普通成员才可以群组的未读通知数", null);
         }
         return JsonResult.ok(resource);
     }
@@ -75,11 +75,11 @@ public class SubscriberGroupController {
     public Object quitGroup(@PathVariable("id") int groupId) {
         Group group = groupService.getGroup(groupId);
         if (group == null) {
-            return JsonResult.notFound("group was not found", null);
+            return JsonResult.notFound("通知群组不存在", null);
         }
         int result = groupService.quitGroup(group);
         if (result == -1) {
-            return JsonResult.forbidden(null, null);
+            return JsonResult.forbidden("通知群组的成员才可以取消订阅", null);
         }
         return JsonResult.noContent().build();
     }

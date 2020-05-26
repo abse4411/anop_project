@@ -68,10 +68,10 @@ public class UserRequestServiceImpl implements UserRequestService {
             return -1;
         }
         if (groupUserService.isInGroup(currentUserId, resource.getGroupId())) {
-            return -1;
+            return -2;
         }
         if (groupService.isPrivateGroup(resource.getGroupId())) {
-            return -1;
+            return -3;
         }
         if (groupService.isPublicGroup(resource.getGroupId())) {
             return addGroupUser(currentUserId, resource.getGroupId());
@@ -123,26 +123,28 @@ public class UserRequestServiceImpl implements UserRequestService {
 
     @Override
     public int acceptOrDenyUserRequest(UserRequest request, byte isAccepted) {
+        if (!authService.canHandleUserRequest(request.getGroupId())) {
+            return -2;
+        }
         if (request.getIsAccepted() != PENDING) {
             return -1;
+        }
+        if (groupUserService.isInGroup(request.getUserId(), request.getGroupId())) {
+            return -3;
+        }
+        if (groupService.isPrivateGroup(request.getGroupId())) {
+            return -4;
         }
         if (isAccepted == DENY) {
             request.setIsAccepted(DENY);
             return userRequestMapper.updateByPrimaryKey(request);
         }
         if (isAccepted == ACCEPT) {
-            if (!authService.canHandleUserRequest(request.getGroupId())) {
-                return -1;
-            }
-            if (!groupUserService.isInGroup(request.getUserId(), request.getGroupId())) {
-                if (!groupService.isPrivateGroup(request.getGroupId())) {
-                    addGroupUser(request.getUserId(), request.getGroupId());
-                }
-            }
+            addGroupUser(request.getUserId(), request.getGroupId());
             request.setIsAccepted(ACCEPT);
             return userRequestMapper.updateByPrimaryKey(request);
         } else {
-            return -1;
+            return -5;
         }
     }
 }

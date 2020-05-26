@@ -38,8 +38,22 @@ public class UserRequestController {
     public Object addUserRequest(
         @RequestBody @Valid UserRequestAddResource resource) {
         int result = userRequestService.addUserRequest(resource);
-        if (result == -1) {
-            return JsonResult.forbidden(null, null);
+        if (result < 0) {
+            String errorMsg;
+            switch (result) {
+                case -1:
+                    errorMsg = "通知群组不存在";
+                    break;
+                case -2:
+                    errorMsg = "申请者已在将在该通知群组中";
+                    break;
+                case -3:
+                    errorMsg = "该通知群组不允许任何人加入";
+                    break;
+                default:
+                    errorMsg = "未知错误";
+            }
+            return JsonResult.forbidden(errorMsg, null);
         }
         return JsonResult.noContent().build();
     }
@@ -80,11 +94,28 @@ public class UserRequestController {
         @PathVariable("id") int id) {
         UserRequest request = userRequestService.getUserRequest(id);
         if (request == null) {
-            return JsonResult.notFound("user request was not found", null);
+            return JsonResult.notFound("加入申请不存在", null);
         }
         int result = userRequestService.acceptOrDenyUserRequest(request, resource.getIsAccepted());
-        if (result == -1) {
-            return JsonResult.forbidden(null, null);
+        if (result < 0) {
+            String errorMsg;
+            switch (result) {
+                case -1:
+                    errorMsg = "加入申请已被处理";
+                    break;
+                case -2:
+                    errorMsg = "通知群组的群主或管理员才可以审核加入申请";
+                    break;
+                case -3:
+                    errorMsg = "申请者已在将在该通知群组中";
+                    break;
+                case -4:
+                    errorMsg = "该通知群组不允许任何人加入";
+                    break;
+                default:
+                    errorMsg = "未知错误";
+            }
+            return JsonResult.forbidden(errorMsg, null);
         }
         return JsonResult.noContent().build();
     }
