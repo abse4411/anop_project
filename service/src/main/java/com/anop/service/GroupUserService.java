@@ -1,10 +1,11 @@
 package com.anop.service;
 
-import com.github.pagehelper.PageInfo;
 import com.anop.pojo.GroupUser;
+import com.anop.resource.AutoTodoResource;
 import com.anop.resource.GroupUserResource;
 import com.anop.resource.GroupUserUpdateResource;
 import com.anop.resource.PageParmResource;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -85,4 +86,21 @@ public interface GroupUserService {
      */
     int updateGroupUserRole(GroupUser oldGroupUser, GroupUserUpdateResource resource);
 
+    /**
+     * 设置登录用户的更新自动转待办事项选项
+     *
+     * @param groupId  通知群组群号
+     * @param resource 自动转待办事项选项参数
+     * @return 如果当前登录用户不是指定通知群组的成员返回<code>-1</code>，否则返回数据库受影响行数
+     */
+    int updateAutoTodoOption(int groupId, AutoTodoResource resource);
+
+
+    /**
+     * 获取登录用户的指定通知群组更新自动转待办事项选项
+     *
+     * @param groupId 通知群组群号
+     * @return 更新自动转待办事项选项信息，如果当前登录用户不是指定通知群组的成员返回<code>null</code>
+     */
+    AutoTodoResource getAutoTodoOption(int groupId);
 }

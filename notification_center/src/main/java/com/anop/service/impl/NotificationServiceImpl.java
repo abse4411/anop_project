@@ -40,6 +40,7 @@ public class NotificationServiceImpl implements NotificationService {
     private static final Byte UNREAD = 0;
     private static final Byte NOT_FAVORITE = 0;
     private static final Byte NOT_IMPORTANT = 0;
+    private static final Byte COMMON_ROLE = 0;
     private static final int MAX_TODO_TITLE_LENGTH = 15;
     @Autowired
     NotificationMapper notificationMapper;
@@ -169,7 +170,8 @@ public class NotificationServiceImpl implements NotificationService {
         GroupUserExample example = new GroupUserExample();
         example.createCriteria()
             .andGroupIdEqualTo(groupId)
-            .andIsAutoEqualTo(AUTO_TODO);
+            .andIsAutoEqualTo(AUTO_TODO)
+            .andIsAdminEqualTo(COMMON_ROLE);
         List<GroupUser> groupUsers = groupUserMapper.selectByExample(example);
         if (groupUsers.size() > 0) {
             List<Integer> userIds = new ArrayList<>(groupUsers.size());

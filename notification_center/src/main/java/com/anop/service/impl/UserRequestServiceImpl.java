@@ -1,17 +1,16 @@
 package com.anop.service.impl;
 
-import com.github.pagehelper.PageInfo;
 import com.anop.mapper.CustomUserRequestMapper;
 import com.anop.mapper.GroupUserMapper;
 import com.anop.mapper.UserRequestMapper;
 import com.anop.pojo.GroupUser;
 import com.anop.pojo.UserRequest;
 import com.anop.pojo.example.UserRequestExample;
+import com.anop.pojo.security.User;
 import com.anop.resource.GroupUserAddResource;
 import com.anop.resource.PageParmResource;
 import com.anop.resource.UserRequestAddResource;
 import com.anop.resource.UserRequestResource;
-import com.anop.pojo.security.User;
 import com.anop.service.GroupAuthService;
 import com.anop.service.GroupService;
 import com.anop.service.GroupUserService;
@@ -19,6 +18,7 @@ import com.anop.service.UserRequestService;
 import com.anop.util.PageSortHelper;
 import com.anop.util.PropertyMapperUtils;
 import com.anop.util.SecurityUtils;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +38,7 @@ public class UserRequestServiceImpl implements UserRequestService {
     private static final byte DENY = 2;
     private static final byte PENDING = 0;
     private static final byte COMMON_ROLE = 0;
+    private static final byte DISABLE_AUTO_TODO = 0;
 
     @Autowired
     CustomUserRequestMapper customUserRequestMapper;
@@ -58,6 +59,7 @@ public class UserRequestServiceImpl implements UserRequestService {
         resource.setGroupId(groupId);
         GroupUser newGroupUser = PropertyMapperUtils.map(resource, GroupUser.class);
         newGroupUser.setIsAdmin(COMMON_ROLE);
+        newGroupUser.setIsAuto(DISABLE_AUTO_TODO);
         return groupUserMapper.insert(newGroupUser);
     }
 

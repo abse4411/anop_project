@@ -1,20 +1,21 @@
 package com.anop.service.impl;
 
-import com.github.pagehelper.PageInfo;
 import com.anop.mapper.CustomGroupUserMapper;
 import com.anop.mapper.GroupUserMapper;
 import com.anop.pojo.GroupUser;
 import com.anop.pojo.example.GroupUserExample;
+import com.anop.pojo.security.User;
+import com.anop.resource.AutoTodoResource;
 import com.anop.resource.GroupUserResource;
 import com.anop.resource.GroupUserUpdateResource;
 import com.anop.resource.PageParmResource;
-import com.anop.pojo.security.User;
 import com.anop.service.GroupAuthService;
 import com.anop.service.GroupService;
 import com.anop.service.GroupUserService;
 import com.anop.util.PageSortHelper;
 import com.anop.util.PropertyMapperUtils;
 import com.anop.util.SecurityUtils;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,4 +114,30 @@ public class GroupUserServiceImpl implements GroupUserService {
         newGroupUser.setId(oldGroupUser.getId());
         return groupUserMapper.updateByPrimaryKeySelective(newGroupUser);
     }
+
+    @Override
+    public int updateAutoTodoOption(int groupId, AutoTodoResource resource) {
+        Integer userId = SecurityUtils.getLoginUser(User.class).getId();
+        if (!isInGroup(userId, groupId)) {
+            return -1;
+        }
+        GroupUser groupUser = getGroupUser(userId, groupId);
+        GroupUser newGroupUser = new GroupUser();
+        newGroupUser.setId(groupUser.getId());
+        newGroupUser.setIsAuto(resource.getIsAuto());
+        return groupUserMapper.updateByPrimaryKeySelective(newGroupUser);
+    }
+
+    @Override
+    public AutoTodoResource getAutoTodoOption(int groupId) {
+        Integer userId = SecurityUtils.getLoginUser(User.class).getId();
+        if (!isInGroup(userId, groupId)) {
+            return null;
+        }
+        GroupUser groupUser = getGroupUser(userId, groupId);
+        AutoTodoResource resource = new AutoTodoResource();
+        resource.setIsAuto(groupUser.getIsAuto());
+        return resource;
+    }
+
 }
