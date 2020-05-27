@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : MySQL
+ Source Server         : localhost-mysql
  Source Server Type    : MySQL
- Source Server Version : 80015
+ Source Server Version : 100410
  Source Host           : localhost:3306
  Source Schema         : anop
 
  Target Server Type    : MySQL
- Target Server Version : 80015
+ Target Server Version : 100410
  File Encoding         : 65001
 
- Date: 30/04/2020 15:24:15
+ Date: 27/05/2020 17:39:33
 */
 
 SET NAMES utf8mb4;
@@ -56,6 +56,7 @@ CREATE TABLE `noti_group_user`  (
   `group_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `is_admin` tinyint(4) NOT NULL DEFAULT 0,
+  `is_auto` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_group_id`(`group_id`) USING BTREE,
   INDEX `idx_user_id`(`user_id`) USING BTREE,
@@ -66,14 +67,14 @@ CREATE TABLE `noti_group_user`  (
 -- ----------------------------
 -- Records of noti_group_user
 -- ----------------------------
-INSERT INTO `noti_group_user` VALUES (1, 1, 2, 1);
-INSERT INTO `noti_group_user` VALUES (5, 8, 3, 0);
-INSERT INTO `noti_group_user` VALUES (10, 8, 1, 0);
-INSERT INTO `noti_group_user` VALUES (11, 14, 3, 0);
-INSERT INTO `noti_group_user` VALUES (12, 8, 4, 0);
-INSERT INTO `noti_group_user` VALUES (15, 1, 3, 0);
-INSERT INTO `noti_group_user` VALUES (16, 14, 4, 0);
-INSERT INTO `noti_group_user` VALUES (27, 9, 2, 0);
+INSERT INTO `noti_group_user` VALUES (1, 1, 2, 1, 0);
+INSERT INTO `noti_group_user` VALUES (5, 8, 3, 0, 1);
+INSERT INTO `noti_group_user` VALUES (10, 8, 1, 0, 1);
+INSERT INTO `noti_group_user` VALUES (11, 14, 3, 0, 0);
+INSERT INTO `noti_group_user` VALUES (12, 8, 4, 0, 1);
+INSERT INTO `noti_group_user` VALUES (15, 1, 3, 0, 0);
+INSERT INTO `noti_group_user` VALUES (16, 14, 4, 0, 0);
+INSERT INTO `noti_group_user` VALUES (27, 9, 2, 0, 0);
 
 -- ----------------------------
 -- Table structure for noti_receiver
@@ -143,7 +144,7 @@ CREATE TABLE `notification`  (
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_noti_group_notification` FOREIGN KEY (`group_id`) REFERENCES `noti_group` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_notification` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of notification
@@ -189,7 +190,7 @@ CREATE TABLE `sys_permission`  (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `pid` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_permission
@@ -243,7 +244,7 @@ CREATE TABLE `todo`  (
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_todo_category_todo` FOREIGN KEY (`category_id`) REFERENCES `todo_category` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_todo` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of todo
@@ -347,7 +348,7 @@ CREATE TABLE `valid_email`  (
   `is_valid` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_email`(`email`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of valid_email
