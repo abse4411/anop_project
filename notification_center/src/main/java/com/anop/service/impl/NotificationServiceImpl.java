@@ -1,22 +1,29 @@
 package com.anop.service.impl;
 
-import com.anop.service.*;
-import com.github.pagehelper.PageInfo;
 import com.anop.mapper.CustomNotificationMapper;
+import com.anop.mapper.GroupUserMapper;
 import com.anop.mapper.NotificationMapper;
 import com.anop.mapper.ReceiverMapper;
+import com.anop.pojo.GroupUser;
 import com.anop.pojo.Notification;
 import com.anop.pojo.Receiver;
+import com.anop.pojo.example.GroupUserExample;
 import com.anop.pojo.example.ReceiverExample;
-import com.anop.resource.*;
 import com.anop.pojo.security.User;
+import com.anop.resource.*;
+import com.anop.service.GroupAuthService;
+import com.anop.service.GroupUserService;
+import com.anop.service.NotificationService;
+import com.anop.service.TodoRemoteService;
 import com.anop.util.PageSortHelper;
 import com.anop.util.PropertyMapperUtils;
 import com.anop.util.SecurityUtils;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +36,7 @@ import java.util.List;
 @Transactional(rollbackFor = Throwable.class)
 public class NotificationServiceImpl implements NotificationService {
     private static final Byte READ = 1;
+    private static final Byte AUTO_TODO = 1;
     private static final Byte UNREAD = 0;
     private static final Byte NOT_FAVORITE = 0;
     private static final Byte NOT_IMPORTANT = 0;
@@ -39,6 +47,8 @@ public class NotificationServiceImpl implements NotificationService {
     CustomNotificationMapper customNotificationMapper;
     @Autowired
     ReceiverMapper receiverMapper;
+    @Autowired
+    GroupUserMapper groupUserMapper;
     @Autowired
     GroupUserService groupUserService;
     @Autowired
@@ -155,6 +165,23 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setGroupId(groupId);
         notification.setCreationDate(new Date());
         notification.setUserId(SecurityUtils.getLoginUser(User.class).getId());
+
+        GroupUserExample example = new GroupUserExample();
+        example.createCriteria()
+            .andGroupIdEqualTo(groupId)
+            .andIsAutoEqualTo(AUTO_TODO);
+        List<GroupUser> groupUsers = groupUserMapper.selectByExample(example);
+        if (groupUsers.size() > 0) {
+            List<Integer> userIds = new ArrayList<>(groupUsers.size());
+            for (GroupUser user : groupUsers) {
+                userIds.add(user.getUserId());
+            }
+            TodoBatchAddResource addResource = new TodoBatchAddResource();
+            addResource.setUserIds(userIds);
+            addResource.setTitle(cutString(resource.getTitle(), MAX_TODO_TITLE_LENGTH));
+            addResource.setContent(resource.getContent());
+            todoService.addTodosBatch(addResource);
+        }
         return notificationMapper.insert(notification);
     }
 
@@ -164,13 +191,19 @@ public class NotificationServiceImpl implements NotificationService {
             return -1;
         }
         TodoAddResource resource = new TodoAddResource();
-        if (notification.getTitle().length() > MAX_TODO_TITLE_LENGTH) {
-            notification.setTitle(notification.getTitle().substring(0, MAX_TODO_TITLE_LENGTH));
-        }
-        resource.setTitle(notification.getTitle());
+        resource.setTitle(cutString(notification.getTitle(), MAX_TODO_TITLE_LENGTH));
         resource.setContent(notification.getContent());
         resource.setIsFavorite(NOT_FAVORITE);
         resource.setIsImportant(NOT_IMPORTANT);
         return todoService.addTodo(resource) != null ? 1 : 0;
+    }
+
+    private String cutString(String str, int maxLength) {
+        if (str != null) {
+            if (str.length() > maxLength) {
+                str = str.substring(0, maxLength);
+            }
+        }
+        return str;
     }
 }

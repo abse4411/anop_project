@@ -157,11 +157,11 @@ public class TodoController {
 
     @ApiOperation(value = "批量添加待办事项", notes = "获取历史待办事项列表")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "成功添加", response = PageInfo.class),
-            @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
+        @ApiResponse(code = 200, message = "成功添加", response = PageInfo.class),
+        @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
     })
     @PostMapping("/batch")
-    public Object addTodosBatch(@Valid TodoBatchAddResource resource) {
+    public Object addTodosBatch(@RequestBody @Valid TodoBatchAddResource resource) {
         return JsonResult.ok(todoService.addTodos(resource));
     }
 

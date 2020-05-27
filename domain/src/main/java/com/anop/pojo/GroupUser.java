@@ -3,11 +3,16 @@ package com.anop.pojo;
 import java.io.Serializable;
 
 public class GroupUser implements Serializable {
-    private static final long serialVersionUID = 1L;
     private Integer id;
+
     private Integer groupId;
+
     private Integer userId;
+
     private Byte isAdmin;
+
+    private static final long serialVersionUID = 1L;
+    private Byte isAuto;
 
     public Integer getId() {
         return id;
@@ -41,13 +46,11 @@ public class GroupUser implements Serializable {
         this.isAdmin = isAdmin;
     }
 
-    @Override
-    public String toString() {
-        return "GroupUser{" +
-            "id=" + id +
-            ", groupId=" + groupId +
-            ", userId=" + userId +
-            ", isAdmin=" + isAdmin +
-            '}';
+    public Byte getIsAuto() {
+        return isAuto;
+    }
+
+    public void setIsAuto(Byte isAuto) {
+        this.isAuto = isAuto;
     }
 }
