@@ -1,19 +1,14 @@
-package com.anop.Controller;
+package com.anop.controller;
 
 import com.anop.pojo.Todo;
 import com.anop.pojo.security.User;
-import com.anop.resource.PageParmResource;
-import com.anop.resource.TodoAddResource;
-import com.anop.resource.TodoFlagResource;
-import com.anop.resource.TodoUpdateResource;
+import com.anop.resource.*;
 import com.anop.service.TodoService;
-import com.anop.util.BindingResultUtils;
 import com.anop.util.JsonResult;
 import com.anop.util.Message;
-import com.github.pagehelper.PageInfo;
 import com.anop.util.SecurityUtils;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -40,10 +35,7 @@ public class TodoController {
     })
     @PostMapping()
     public Object addTodo(
-            @RequestBody @Valid TodoAddResource resource, BindingResult bindingResult) throws URISyntaxException {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+            @RequestBody @Valid TodoAddResource resource) throws URISyntaxException {
         Todo todo = todoService.addTodo(resource);
         return JsonResult.created(new URI("http://localhost:8080/v1/todos/" + todo.getId())).body(todo);
     }
@@ -58,10 +50,7 @@ public class TodoController {
             @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
     })
     @GetMapping()
-    public Object getTodoList(@Valid TodoFlagResource flagResource, @Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getTodoList(@Valid TodoFlagResource flagResource, @Valid PageParmResource page) {
         return JsonResult.ok(todoService.listUserTodo(page, flagResource));
     }
 
@@ -77,11 +66,7 @@ public class TodoController {
     @PutMapping("/{id}")
     public Object updateTodo(
             @RequestBody @Valid TodoUpdateResource resource,
-            @PathVariable int id,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+            @PathVariable int id) {
         Todo todo = todoService.getTodo(id);
 
         if (todo == null) {
@@ -166,10 +151,27 @@ public class TodoController {
             @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
     })
     @GetMapping("/histories")
-    public Object getHistoryTodoList(@Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getHistoryTodoList(@Valid PageParmResource page) {
         return JsonResult.ok(todoService.listHistoryTodo(page));
+    }
+
+    @ApiOperation(value = "批量添加待办事项", notes = "获取历史待办事项列表")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功添加", response = PageInfo.class),
+            @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
+    })
+    @PostMapping("/batch")
+    public Object addTodosBatch(@Valid TodoBatchAddResource resource) {
+        return JsonResult.ok(todoService.addTodos(resource));
+    }
+
+    @ApiOperation(value = "搜索满足条件的待办事项", notes = "获取历史待办事项列表")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "成功获取", response = PageInfo.class),
+            @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
+    })
+    @PostMapping("/search")
+    public Object searchTodos(@RequestParam String title, @Valid PageParmResource page) {
+        return JsonResult.ok(todoService.searchTodosLike(title, page));
     }
 }

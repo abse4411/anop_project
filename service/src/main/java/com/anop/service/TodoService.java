@@ -1,16 +1,13 @@
 package com.anop.service;
 
+import com.anop.resource.*;
 import com.github.pagehelper.PageInfo;
 import com.anop.pojo.Todo;
-import com.anop.resource.PageParmResource;
-import com.anop.resource.TodoAddResource;
-import com.anop.resource.TodoFlagResource;
-import com.anop.resource.TodoUpdateResource;
 
 import java.util.List;
 
 /**
- * @author ZYF
+ * @author chcic
  */
 public interface TodoService {
     /**
@@ -71,4 +68,21 @@ public interface TodoService {
      * @return 指定分页的历史待办列表
      */
     PageInfo<List<Todo>> listHistoryTodo(PageParmResource page);
+
+    /**
+     * 批量添加待办
+     *
+     * @param resource 请求体
+     * @return 插入的条数
+     */
+    int addTodos(TodoBatchAddResource resource);
+
+    /**
+     * 按标题模糊搜索待办
+     *
+     * @param title 标题
+     * @param page 分页参数
+     * @return 指定分页的历史待办列表
+     */
+    PageInfo<List<Todo>> searchTodosLike(String title, PageParmResource page);
 }

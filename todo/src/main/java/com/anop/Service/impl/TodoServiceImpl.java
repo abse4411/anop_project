@@ -1,5 +1,6 @@
-package com.anop.Service.impl;
+package com.anop.service.impl;
 
+import com.anop.mapper.CustomTodoMapper;
 import com.anop.mapper.TodoMapper;
 import com.anop.pojo.Todo;
 import com.anop.pojo.example.TodoExample;
@@ -39,6 +40,9 @@ public class TodoServiceImpl implements TodoService {
 
     @Resource
     TodoMapper todoMapper;
+
+    @Resource
+    CustomTodoMapper customTodoMapper;
 
     @Override
     public Todo addTodo(TodoAddResource resource) {
@@ -145,6 +149,26 @@ public class TodoServiceImpl implements TodoService {
         TodoExample todoExample = new TodoExample();
         TodoExample.Criteria criteria = todoExample.createCriteria();
         criteria.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId());
+        PageSortHelper.pageAndSort(page, TodoResource.class);
+        List<Todo> todos = todoMapper.selectByExample(todoExample);
+        return new PageInfo(todos);
+    }
+
+    @Override
+    public int addTodos(TodoBatchAddResource resource) {
+        Todo newTodo = new Todo();
+        newTodo.setTitle(resource.getTitle());
+        newTodo.setContent(resource.getContent());
+        return customTodoMapper.insertBatch(resource.getUserIds(), newTodo);
+    }
+
+    @Override
+    public PageInfo<List<Todo>> searchTodosLike(String title, PageParmResource page) {
+        TodoExample todoExample = new TodoExample();
+        TodoExample.Criteria criteria = todoExample.createCriteria();
+        criteria.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId())
+                .andTitleLike("%" + title + "%");
+
         PageSortHelper.pageAndSort(page, TodoResource.class);
         List<Todo> todos = todoMapper.selectByExample(todoExample);
         return new PageInfo(todos);

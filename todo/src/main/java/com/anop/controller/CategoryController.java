@@ -1,4 +1,4 @@
-package com.anop.Controller;
+package com.anop.controller;
 
 import com.anop.pojo.Category;
 import com.anop.pojo.security.User;
@@ -6,13 +6,11 @@ import com.anop.resource.CategoryAddResource;
 import com.anop.resource.CategoryUpdateResource;
 import com.anop.resource.PageParmResource;
 import com.anop.service.CategoryService;
-import com.anop.util.BindingResultUtils;
 import com.anop.util.JsonResult;
 import com.anop.util.Message;
 import com.anop.util.SecurityUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -39,10 +37,7 @@ public class CategoryController {
     })
     @PostMapping()
     public Object addCateGory(
-            @RequestBody @Valid CategoryAddResource resource, BindingResult bindingResult) throws URISyntaxException {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+            @RequestBody @Valid CategoryAddResource resource) throws URISyntaxException {
         Category category = categoryService.addCategory(resource);
         return JsonResult.created(new URI("http://localhost:8080/v1/categories/" + category.getId())).body(category);
     }
@@ -53,10 +48,8 @@ public class CategoryController {
             @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
     })
     @GetMapping()
-    public Object listCategories(@Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object listCategories(@Valid PageParmResource page) {
+
         return JsonResult.ok(categoryService.listCategories(page));
     }
 
@@ -98,11 +91,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     public Object updateCategories(
             @PathVariable int id,
-            @RequestBody @Valid CategoryUpdateResource resource,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+            @RequestBody @Valid CategoryUpdateResource resource) {
         Category category = categoryService.getCategory(id);
         if (category == null) {
             return JsonResult.notFound("category was not found", null);
@@ -144,10 +133,7 @@ public class CategoryController {
             @ApiResponse(code = 403, message = "没有此分类的访问权限", response = Message.class)
     })
     @GetMapping("/list/{categoryId}")
-    public Object getTodoByCategoryId(@PathVariable int categoryId, @Valid PageParmResource page, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object getTodoByCategoryId(@PathVariable int categoryId, @Valid PageParmResource page) {
         Category category = categoryService.getCategory(categoryId);
         if (category == null) {
             return JsonResult.notFound("category was not found", null);
