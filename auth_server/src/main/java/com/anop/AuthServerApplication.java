@@ -1,15 +1,14 @@
 package com.anop;
 
 import com.anop.pojo.security.User;
+import com.anop.resource.UserResource;
 import com.anop.util.JsonResult;
-import com.anop.util.StringUtils;
+import com.anop.util.PropertyMapperUtils;
+import com.anop.util.SecurityUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +41,9 @@ public class AuthServerApplication {
 
     @RequestMapping(path = "/user", method = {RequestMethod.GET, RequestMethod.POST})
     public Object user() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getPrincipal();
+        User loginUser = SecurityUtils.getLoginUser(User.class);
+        UserResource resource = PropertyMapperUtils.map(loginUser, UserResource.class);
+        return JsonResult.ok(resource);
     }
 
     @PostMapping(path = "/failed")
