@@ -1,5 +1,6 @@
 package com.anop.util;
 
+import lombok.Data;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -12,16 +13,22 @@ import java.util.List;
  * @author Xue_Feng
  */
 public class BindingResultUtils {
-    public static List<String> getErrorList(BindingResult bindingResult) {
-        List<String> errorList = new ArrayList<>(bindingResult.getFieldErrorCount());
-        StringBuilder sb = new StringBuilder(48);
+    public static List<BindingErrorMessage> getErrorList(BindingResult bindingResult) {
+        List<BindingErrorMessage> errorList = new ArrayList<>(bindingResult.getFieldErrorCount());
         for (FieldError error : bindingResult.getFieldErrors()) {
-            sb.setLength(0);
-            sb.append(error.getField());
-            sb.append(":");
-            sb.append(error.getDefaultMessage());
-            errorList.add(sb.toString());
+            errorList.add(new BindingErrorMessage(error.getField(), error.getDefaultMessage()));
         }
         return errorList;
+    }
+}
+
+@Data
+class BindingErrorMessage {
+    private String field;
+    private String message;
+
+    public BindingErrorMessage(String field, String message) {
+        this.field = field;
+        this.message = message;
     }
 }
