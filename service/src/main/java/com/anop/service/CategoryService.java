@@ -65,7 +65,8 @@ public interface CategoryService {
      *
      * @param categoryId 分类ID
      * @param page
+     * @param searchResource
      * @return 待办事项列表
      */
-    PageInfo<List<TodoResource>> listTodoByCategoryId(Integer categoryId, PageParmResource page);
+    PageInfo<List<TodoResource>> listTodoByCategoryId(Integer categoryId, PageParmResource page, TodoSearchResource searchResource);
 }

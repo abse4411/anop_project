@@ -11,7 +11,6 @@ import com.anop.util.PageSortHelper;
 import com.anop.util.PropertyMapperUtils;
 import com.anop.util.SecurityUtils;
 import com.github.pagehelper.PageInfo;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -110,13 +109,16 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public PageInfo<List<Todo>> listUserTodo(PageParmResource page, TodoFlagResource flagResource) {
+    public PageInfo<List<Todo>> listUserTodo(PageParmResource page, TodoFlagResource flagResource, TodoSearchResource searchResource) {
+        String title = (searchResource.getTitle() == null) ? "" : searchResource.getTitle();
+
         TodoExample todoExample = new TodoExample();
 
         TodoExample.Criteria criteria1 = todoExample.createCriteria();
         criteria1.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId())
                 .andIsCompletedEqualTo((byte) 0)
-                .andEndDateGreaterThan(new Date());
+                .andEndDateGreaterThan(new Date())
+                .andTitleLike("%" + title + "%");
 
         if (flagResource.getFlag() == IMPORTANT) {
             criteria1.andIsImportantEqualTo((byte) 1);
@@ -128,7 +130,8 @@ public class TodoServiceImpl implements TodoService {
         TodoExample.Criteria criteria2 = todoExample.createCriteria();
         criteria2.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId())
                 .andIsCompletedEqualTo((byte) 0)
-                .andEndDateIsNull();
+                .andEndDateIsNull()
+                .andTitleLike("%" + title + "%");
 
         if (flagResource.getFlag() == IMPORTANT) {
             criteria2.andIsImportantEqualTo((byte) 1);
@@ -145,10 +148,12 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public PageInfo<List<Todo>> listHistoryTodo(PageParmResource page) {
+    public PageInfo<List<Todo>> listHistoryTodo(PageParmResource page, TodoSearchResource searchResource) {
+        String title = (searchResource.getTitle() == null) ? "" : searchResource.getTitle();
         TodoExample todoExample = new TodoExample();
         TodoExample.Criteria criteria = todoExample.createCriteria();
-        criteria.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId());
+        criteria.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId())
+                .andTitleLike("%" + title + "%");
         PageSortHelper.pageAndSort(page, TodoResource.class);
         List<Todo> todos = todoMapper.selectByExample(todoExample);
         return new PageInfo(todos);
@@ -160,17 +165,5 @@ public class TodoServiceImpl implements TodoService {
         newTodo.setTitle(resource.getTitle());
         newTodo.setContent(resource.getContent());
         return customTodoMapper.insertBatch(resource.getUserIds(), newTodo);
-    }
-
-    @Override
-    public PageInfo<List<Todo>> searchTodosLike(String title, PageParmResource page) {
-        TodoExample todoExample = new TodoExample();
-        TodoExample.Criteria criteria = todoExample.createCriteria();
-        criteria.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId())
-                .andTitleLike("%" + title + "%");
-
-        PageSortHelper.pageAndSort(page, TodoResource.class);
-        List<Todo> todos = todoMapper.selectByExample(todoExample);
-        return new PageInfo(todos);
     }
 }

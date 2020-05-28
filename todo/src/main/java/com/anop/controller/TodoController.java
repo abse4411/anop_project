@@ -42,7 +42,7 @@ public class TodoController {
 
     @ApiOperation(value = "获取待办事项列表", notes = "获取指定类型的待办事项列表")
     @ApiImplicitParams(
-            @ApiImplicitParam(name = "flag", value = "0:所有 1:重要 2:收藏", required = false, dataType = "int")
+            @ApiImplicitParam(name = "flag", value = "0:所有 1:重要 2:收藏", dataType = "int")
     )
     @ApiResponses({
             @ApiResponse(code = 200, message = "成功获取", response = PageInfo.class),
@@ -50,8 +50,8 @@ public class TodoController {
             @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
     })
     @GetMapping()
-    public Object getTodoList(@Valid TodoFlagResource flagResource, @Valid PageParmResource page) {
-        return JsonResult.ok(todoService.listUserTodo(page, flagResource));
+    public Object getTodoList(@Valid TodoSearchResource searchResource,@Valid TodoFlagResource flagResource, @Valid PageParmResource page) {
+        return JsonResult.ok(todoService.listUserTodo(page, flagResource, searchResource));
     }
 
     @ApiOperation(value = "更新待办事项的信息", notes = "更新待办事项的信息（不包括完成状态）")
@@ -151,27 +151,17 @@ public class TodoController {
             @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
     })
     @GetMapping("/histories")
-    public Object getHistoryTodoList(@Valid PageParmResource page) {
-        return JsonResult.ok(todoService.listHistoryTodo(page));
+    public Object getHistoryTodoList(@Valid TodoSearchResource searchResource,@Valid PageParmResource page) {
+        return JsonResult.ok(todoService.listHistoryTodo(page, searchResource));
     }
 
-    @ApiOperation(value = "批量添加待办事项", notes = "获取历史待办事项列表")
+    @ApiOperation(value = "批量添加待办事项", notes = "批量添加待办事项")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "成功添加", response = PageInfo.class),
-        @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
+            @ApiResponse(code = 200, message = "成功添加", response = PageInfo.class),
+            @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
     })
     @PostMapping("/batch")
     public Object addTodosBatch(@RequestBody @Valid TodoBatchAddResource resource) {
         return JsonResult.ok(todoService.addTodos(resource));
-    }
-
-    @ApiOperation(value = "搜索满足条件的待办事项", notes = "获取历史待办事项列表")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "成功获取", response = PageInfo.class),
-            @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
-    })
-    @PostMapping("/search")
-    public Object searchTodos(@RequestParam String title, @Valid PageParmResource page) {
-        return JsonResult.ok(todoService.searchTodosLike(title, page));
     }
 }

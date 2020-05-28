@@ -5,6 +5,7 @@ import com.anop.pojo.security.User;
 import com.anop.resource.CategoryAddResource;
 import com.anop.resource.CategoryUpdateResource;
 import com.anop.resource.PageParmResource;
+import com.anop.resource.TodoSearchResource;
 import com.anop.service.CategoryService;
 import com.anop.util.JsonResult;
 import com.anop.util.Message;
@@ -133,7 +134,7 @@ public class CategoryController {
             @ApiResponse(code = 403, message = "没有此分类的访问权限", response = Message.class)
     })
     @GetMapping("/list/{categoryId}")
-    public Object getTodoByCategoryId(@PathVariable int categoryId, @Valid PageParmResource page) {
+    public Object getTodoByCategoryId(@Valid TodoSearchResource searchResource, @PathVariable int categoryId, @Valid PageParmResource page, @RequestParam String title) {
         Category category = categoryService.getCategory(categoryId);
         if (category == null) {
             return JsonResult.notFound("category was not found", null);
@@ -141,6 +142,6 @@ public class CategoryController {
         if (!category.getUserId().equals(SecurityUtils.getLoginUser(User.class).getId())) {
             return JsonResult.forbidden("you have no permission to get the todos of this category", null);
         }
-        return JsonResult.ok(categoryService.listTodoByCategoryId(categoryId, page));
+        return JsonResult.ok(categoryService.listTodoByCategoryId(categoryId, page, searchResource));
     }
 }

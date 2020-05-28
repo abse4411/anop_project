@@ -1,8 +1,8 @@
 package com.anop.service;
 
+import com.anop.pojo.Todo;
 import com.anop.resource.*;
 import com.github.pagehelper.PageInfo;
-import com.anop.pojo.Todo;
 
 import java.util.List;
 
@@ -57,17 +57,19 @@ public interface TodoService {
      *
      * @param page         分页参数
      * @param flagResource 类型参数
+     * @param searchResource
      * @return 指定分页和类型的历史待办列表
      */
-    PageInfo<List<Todo>> listUserTodo(PageParmResource page, TodoFlagResource flagResource);
+    PageInfo<List<Todo>> listUserTodo(PageParmResource page, TodoFlagResource flagResource, TodoSearchResource searchResource);
 
     /**
      * 分页获取用户的历史待办
      *
      * @param page 分页参数
+     * @param searchResource
      * @return 指定分页的历史待办列表
      */
-    PageInfo<List<Todo>> listHistoryTodo(PageParmResource page);
+    PageInfo<List<Todo>> listHistoryTodo(PageParmResource page, TodoSearchResource searchResource);
 
     /**
      * 批量添加待办
@@ -76,13 +78,4 @@ public interface TodoService {
      * @return 插入的条数
      */
     int addTodos(TodoBatchAddResource resource);
-
-    /**
-     * 按标题模糊搜索待办
-     *
-     * @param title 标题
-     * @param page 分页参数
-     * @return 指定分页的历史待办列表
-     */
-    PageInfo<List<Todo>> searchTodosLike(String title, PageParmResource page);
 }

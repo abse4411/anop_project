@@ -89,12 +89,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PageInfo<List<TodoResource>> listTodoByCategoryId(Integer categoryId, PageParmResource page) {
+    public PageInfo<List<TodoResource>> listTodoByCategoryId(Integer categoryId, PageParmResource page, TodoSearchResource searchResource) {
+        String title = (searchResource.getTitle() == null) ? "" : searchResource.getTitle();
+
         TodoExample todoExample = new TodoExample();
 
         TodoExample.Criteria criteria1 = todoExample.createCriteria();
         criteria1.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId())
-                .andCategoryIdEqualTo(categoryId);
+                .andCategoryIdEqualTo(categoryId)
+                .andTitleLike("%" + title + "%");
 
         PageSortHelper.pageAndSort(page, TodoResource.class);
         List<Todo> todos = todoMapper.selectByExample(todoExample);
