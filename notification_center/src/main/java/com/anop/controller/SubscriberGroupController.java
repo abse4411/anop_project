@@ -12,6 +12,7 @@ import com.anop.util.Message;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -81,7 +82,7 @@ public class SubscriberGroupController {
         }
         int result = groupService.quitGroup(group);
         if (result == -1) {
-            return JsonResult.forbidden("通知群组的成员才可以取消订阅", null);
+            return JsonResult.forbidden("通知群组的成员(非群主)才可以取消订阅", null);
         }
         return JsonResult.noContent().build();
     }
@@ -98,7 +99,7 @@ public class SubscriberGroupController {
     public Object getGroupUserAutoTodoOption(@PathVariable("id") int groupId) {
         AutoTodoResource resource = groupUserService.getAutoTodoOption(groupId);
         if (resource == null) {
-            return JsonResult.forbidden("只有该通知群组成员才可以获取自动通知转待办选项信息", null);
+            return JsonResult.forbidden("只有该通知群组成员(非群主)才可以获取自动通知转待办选项信息", null);
         }
         return JsonResult.ok(resource);
     }
@@ -113,11 +114,11 @@ public class SubscriberGroupController {
     })
     @PatchMapping("/{id}/autoTodo")
     public Object updateGroupUserAutoTodoOption(
-        @RequestBody @Valid AutoTodoResource resource,
+        @RequestBody @Validated AutoTodoResource resource,
         @PathVariable("id") int groupId) {
         int result = groupUserService.updateAutoTodoOption(groupId, resource);
         if (result == -1) {
-            return JsonResult.forbidden("只有该通知群组成员才可以设置自动通知转待办选项", null);
+            return JsonResult.forbidden("只有该通知群组成员(非群主)才可以设置自动通知转待办选项", null);
         }
         return JsonResult.noContent().build();
     }

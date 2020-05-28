@@ -170,8 +170,7 @@ public class NotificationServiceImpl implements NotificationService {
         GroupUserExample example = new GroupUserExample();
         example.createCriteria()
             .andGroupIdEqualTo(groupId)
-            .andIsAutoEqualTo(AUTO_TODO)
-            .andIsAdminEqualTo(COMMON_ROLE);
+            .andIsAutoEqualTo(AUTO_TODO);
         List<GroupUser> groupUsers = groupUserMapper.selectByExample(example);
         if (groupUsers.size() > 0) {
             List<Integer> userIds = new ArrayList<>(groupUsers.size());

@@ -118,7 +118,7 @@ public class GroupUserServiceImpl implements GroupUserService {
     @Override
     public int updateAutoTodoOption(int groupId, AutoTodoResource resource) {
         Integer userId = SecurityUtils.getLoginUser(User.class).getId();
-        if (!isInGroup(userId, groupId)) {
+        if (!isInGroup(userId, groupId) || groupService.isGroupCreator(userId, groupId)) {
             return -1;
         }
         GroupUser groupUser = getGroupUser(userId, groupId);
@@ -131,7 +131,7 @@ public class GroupUserServiceImpl implements GroupUserService {
     @Override
     public AutoTodoResource getAutoTodoOption(int groupId) {
         Integer userId = SecurityUtils.getLoginUser(User.class).getId();
-        if (!isInGroup(userId, groupId)) {
+        if (!isInGroup(userId, groupId) || groupService.isGroupCreator(userId, groupId)) {
             return null;
         }
         GroupUser groupUser = getGroupUser(userId, groupId);
