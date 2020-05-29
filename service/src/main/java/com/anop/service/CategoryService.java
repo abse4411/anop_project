@@ -23,9 +23,10 @@ public interface CategoryService {
      * 分页列出用户的分类
      *
      * @param page 分页参数
+     * @param searchResource
      * @return 指定分页的分类列表
      */
-    PageInfo<List<CategoryListResource>> listCategories(PageParmResource page);
+    PageInfo<List<CategoryListResource>> listCategories(PageParmResource page, CategorySearchResource searchResource);
 
     /**
      * 获取指定id的分类
@@ -65,7 +66,8 @@ public interface CategoryService {
      *
      * @param categoryId 分类ID
      * @param page
+     * @param searchResource
      * @return 待办事项列表
      */
-    PageInfo<List<TodoResource>> listTodoByCategoryId(Integer categoryId, PageParmResource page);
+    PageInfo<List<TodoResource>> listTodoByCategoryId(Integer categoryId, PageParmResource page, TodoSearchResource searchResource);
 }

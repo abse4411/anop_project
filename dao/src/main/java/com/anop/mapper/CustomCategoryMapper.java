@@ -1,6 +1,7 @@
 package com.anop.mapper;
 
 import com.anop.resource.CategoryListResource;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,6 +18,6 @@ public interface CustomCategoryMapper {
      * @param userId 用户id
      * @return 待办事项分类列表
      */
-    List<CategoryListResource> listCategories(Integer userId);
+    List<CategoryListResource> listCategories(@Param("userId") Integer userId, @Param("typeName") String typeName);
 
 }

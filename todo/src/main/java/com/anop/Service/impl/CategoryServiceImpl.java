@@ -44,10 +44,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PageInfo<List<CategoryListResource>> listCategories(PageParmResource page) {
+    public PageInfo<List<CategoryListResource>> listCategories(PageParmResource page, CategorySearchResource searchResource) {
+        String typeName = (searchResource.getTypeName() == null) ? "" : searchResource.getTypeName();
         PageSortHelper.pageAndSort(page, CategoryListResource.class);
         List<CategoryListResource> categories = customCategoryMapper.listCategories(
-                SecurityUtils.getLoginUser(User.class).getId()
+                SecurityUtils.getLoginUser(User.class).getId(), "%" + typeName + "%"
         );
         return new PageInfo(categories);
     }
@@ -84,17 +85,20 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryListResource> listAllCategories() {
         int userId = SecurityUtils.getLoginUser(User.class).getId();
-        List<CategoryListResource> categories = customCategoryMapper.listCategories(userId);
+        List<CategoryListResource> categories = customCategoryMapper.listCategories(userId, "%%");
         return categories;
     }
 
     @Override
-    public PageInfo<List<TodoResource>> listTodoByCategoryId(Integer categoryId, PageParmResource page) {
+    public PageInfo<List<TodoResource>> listTodoByCategoryId(Integer categoryId, PageParmResource page, TodoSearchResource searchResource) {
+        String title = (searchResource.getTitle() == null) ? "" : searchResource.getTitle();
+
         TodoExample todoExample = new TodoExample();
 
         TodoExample.Criteria criteria1 = todoExample.createCriteria();
         criteria1.andUserIdEqualTo(SecurityUtils.getLoginUser(User.class).getId())
-                .andCategoryIdEqualTo(categoryId);
+                .andCategoryIdEqualTo(categoryId)
+                .andTitleLike("%" + title + "%");
 
         PageSortHelper.pageAndSort(page, TodoResource.class);
         List<Todo> todos = todoMapper.selectByExample(todoExample);

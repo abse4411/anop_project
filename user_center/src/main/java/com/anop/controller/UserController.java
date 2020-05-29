@@ -7,7 +7,6 @@ import com.anop.service.UserService;
 import com.anop.util.*;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,13 +41,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "服务器内部错误，修改密码失败", response = Message.class)
     })
     @PostMapping("account/password")
-    public Object resetPassword(
-            @RequestBody @Valid PasswordUpdateResource resource,
-            BindingResult bindingResult) {
-
-        if(bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object resetPassword(@RequestBody @Valid PasswordUpdateResource resource) {
 
         User user = SecurityUtils.getLoginUser(User.class);
         if( !userService.isRightOldPassword(resource.getOldPassword()) ) {
