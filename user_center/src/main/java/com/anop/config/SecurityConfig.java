@@ -10,11 +10,16 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @Configuration
 @EnableRedisHttpSession
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private static final String VALID_EMAIL_URL = "/valid_email";
+    private static final String SIGN_UP_URL = "/signup";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable();
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests()
+            .antMatchers(VALID_EMAIL_URL, SIGN_UP_URL).permitAll()
+            .anyRequest().authenticated();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
     }
 }
