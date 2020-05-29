@@ -132,14 +132,15 @@ public class UserRequestServiceImpl implements UserRequestService {
             return -1;
         }
         if (groupUserService.isInGroup(request.getUserId(), request.getGroupId())) {
+            denyRequest(request);
             return -3;
         }
         if (groupService.isPrivateGroup(request.getGroupId())) {
+            denyRequest(request);
             return -4;
         }
         if (isAccepted == DENY) {
-            request.setIsAccepted(DENY);
-            return userRequestMapper.updateByPrimaryKey(request);
+            return denyRequest(request);
         }
         if (isAccepted == ACCEPT) {
             addGroupUser(request.getUserId(), request.getGroupId());
@@ -148,5 +149,10 @@ public class UserRequestServiceImpl implements UserRequestService {
         } else {
             return -5;
         }
+    }
+
+    private int denyRequest(UserRequest request) {
+        request.setIsAccepted(DENY);
+        return userRequestMapper.updateByPrimaryKeySelective(request);
     }
 }
