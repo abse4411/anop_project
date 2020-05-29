@@ -4,15 +4,12 @@ import com.anop.pojo.ValidEmail;
 import com.anop.resource.UserSignUpResource;
 import com.anop.resource.ValidEmailResource;
 import com.anop.service.SignUpService;
-import com.anop.util.BindingResultUtils;
 import com.anop.util.JsonResult;
 import com.anop.util.Message;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
@@ -37,12 +34,8 @@ public class SignUpController {
             @ApiResponse(code = 500, message = "服务器内部错误，发送邮件失败", response = Message.class)
     })
     @PostMapping("valid_email")
-    public Object validEmail(
-            @RequestBody @Valid ValidEmailResource resource,
-            BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object validEmail(@RequestBody @Valid ValidEmailResource resource) {
+
         if(signUpService.isSignedUpEmail(resource.getEmail())) {
             return JsonResult.badRequest("Email has been signed up", null);
         }
@@ -64,12 +57,8 @@ public class SignUpController {
             @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class)
     })
     @PostMapping("signup")
-    public Object signUp(
-            @RequestBody @Valid UserSignUpResource resource,
-            BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object signUp(@RequestBody @Valid UserSignUpResource resource) {
+
         ValidEmail validEmail = signUpService.getValidEmail(resource.getEmail());
         if(validEmail == null) {
             return JsonResult.badRequest("Email is not verified", null);

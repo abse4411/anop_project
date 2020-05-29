@@ -5,13 +5,11 @@ import com.anop.pojo.security.User;
 import com.anop.resource.UserInfoResource;
 import com.anop.resource.UserInfoUpdateResource;
 import com.anop.service.UserInfoService;
-import com.anop.util.BindingResultUtils;
 import com.anop.util.JsonResult;
 import com.anop.util.Message;
 import com.anop.util.SecurityUtils;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,12 +49,8 @@ public class UserInfoController {
             @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
     })
     @PutMapping("profile")
-    public Object updateUserInfo(
-            @RequestBody @Valid UserInfoUpdateResource resource,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return JsonResult.unprocessableEntity("error in validating", BindingResultUtils.getErrorList(bindingResult));
-        }
+    public Object updateUserInfo(@RequestBody @Valid UserInfoUpdateResource resource) {
+
         User loginUser = SecurityUtils.getLoginUser(User.class);
         UserInfo userInfo = userInfoService.getUserInfoByUserId(loginUser.getId());
 
@@ -103,6 +97,5 @@ public class UserInfoController {
         return JsonResult.ok(url);
 
     }
-
 
 }
