@@ -44,10 +44,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PageInfo<List<CategoryListResource>> listCategories(PageParmResource page) {
+    public PageInfo<List<CategoryListResource>> listCategories(PageParmResource page, CategorySearchResource searchResource) {
+        String typeName = (searchResource.getTypeName() == null) ? "" : searchResource.getTypeName();
         PageSortHelper.pageAndSort(page, CategoryListResource.class);
         List<CategoryListResource> categories = customCategoryMapper.listCategories(
-                SecurityUtils.getLoginUser(User.class).getId()
+                SecurityUtils.getLoginUser(User.class).getId(), "%" + typeName + "%"
         );
         return new PageInfo(categories);
     }
@@ -84,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryListResource> listAllCategories() {
         int userId = SecurityUtils.getLoginUser(User.class).getId();
-        List<CategoryListResource> categories = customCategoryMapper.listCategories(userId);
+        List<CategoryListResource> categories = customCategoryMapper.listCategories(userId, "%%");
         return categories;
     }
 

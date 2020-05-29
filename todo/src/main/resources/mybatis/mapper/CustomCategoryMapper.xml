@@ -6,7 +6,7 @@
         <result column="type_name" jdbcType="VARCHAR" property="typeName"/>
         <result column="todo_num" jdbcType="VARCHAR" property="todoNum"/>
     </resultMap>
-    <select id="listCategories" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="listCategories" resultMap="BaseResultMap">
         SELECT tc.id,
                tc.type_name,
                (SELECT COUNT(todo.id)
@@ -16,7 +16,8 @@
         FROM todo_category as tc
                  JOIN user_info as ui
         WHERE tc.user_id = ui.user_id
-          AND ui.user_id = #{userId,jdbcType=INTEGER}
+          AND ui.user_id = #{userId}
+          AND tc.type_name LIKE #{typeName}
     </select>
 
 </mapper>

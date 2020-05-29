@@ -2,10 +2,7 @@ package com.anop.controller;
 
 import com.anop.pojo.Category;
 import com.anop.pojo.security.User;
-import com.anop.resource.CategoryAddResource;
-import com.anop.resource.CategoryUpdateResource;
-import com.anop.resource.PageParmResource;
-import com.anop.resource.TodoSearchResource;
+import com.anop.resource.*;
 import com.anop.service.CategoryService;
 import com.anop.util.JsonResult;
 import com.anop.util.Message;
@@ -49,9 +46,9 @@ public class CategoryController {
             @ApiResponse(code = 422, message = "分页参数验证错误", response = Message.class)
     })
     @GetMapping()
-    public Object listCategories(@Valid PageParmResource page) {
+    public Object listCategories(@Valid CategorySearchResource searchResource, @Valid PageParmResource page) {
 
-        return JsonResult.ok(categoryService.listCategories(page));
+        return JsonResult.ok(categoryService.listCategories(page, searchResource));
     }
 
     @ApiOperation(value = "获取当前用户的所有分类", notes = "获取当前用户的所有分类")
