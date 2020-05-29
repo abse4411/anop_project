@@ -131,7 +131,7 @@ public class CategoryController {
             @ApiResponse(code = 403, message = "没有此分类的访问权限", response = Message.class)
     })
     @GetMapping("/list/{categoryId}")
-    public Object getTodoByCategoryId(@Valid TodoSearchResource searchResource, @PathVariable int categoryId, @Valid PageParmResource page, @RequestParam String title) {
+    public Object getTodoByCategoryId(@Valid TodoSearchResource searchResource, @PathVariable int categoryId, @Valid PageParmResource page) {
         Category category = categoryService.getCategory(categoryId);
         if (category == null) {
             return JsonResult.notFound("category was not found", null);
