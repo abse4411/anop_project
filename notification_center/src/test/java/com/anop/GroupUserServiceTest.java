@@ -1,12 +1,13 @@
 package com.anop;
 
-import com.github.pagehelper.PageInfo;
 import com.anop.pojo.GroupUser;
+import com.anop.resource.AutoTodoResource;
 import com.anop.resource.GroupUserResource;
 import com.anop.resource.GroupUserUpdateResource;
 import com.anop.resource.PageParmResource;
 import com.anop.service.GroupUserService;
 import com.anop.util.test.MockUtils;
+import com.github.pagehelper.PageInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,6 +59,12 @@ public class GroupUserServiceTest {
         resource.setIsAdmin((byte) 1);
         result = groupUserService.updateGroupUserRole(groupUser, resource);
         Assertions.assertEquals(badResult, result, "用户不是该群群主，却可以更新该群成员");
+
+        AutoTodoResource todoOption = groupUserService.getAutoTodoOption(14);
+        Assertions.assertNull(todoOption, "用户不是该群成员，却可以获取该群自动代办事项选项信息");
+        todoOption = new AutoTodoResource();
+        result = groupUserService.updateAutoTodoOption(10, todoOption);
+        Assertions.assertEquals(badResult, result, "用户不是该群成员，却可以更新该群自动代办事项选项信息");
     }
 
     @Test
@@ -89,6 +96,12 @@ public class GroupUserServiceTest {
         resource.setIsAdmin((byte) 1);
         result = groupUserService.updateGroupUserRole(groupUser, resource);
         Assertions.assertTrue(result > 0, "用户是该群群主，却不可以更新该群成员");
+
+        AutoTodoResource todoOption = groupUserService.getAutoTodoOption(1);
+        Assertions.assertNotNull(todoOption, "用户是该群成员，却不可以获取该群自动代办事项选项信息");
+        todoOption = new AutoTodoResource();
+        result = groupUserService.updateAutoTodoOption(1, todoOption);
+        Assertions.assertTrue(result > 0, "用户是该群成员，却不可以更新该群自动代办事项选项信息");
     }
 
 }
