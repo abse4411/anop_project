@@ -33,7 +33,7 @@ public class UserInfoController {
         User loginUser = SecurityUtils.getLoginUser(User.class);
         UserInfoResource resource = userInfoService.getUserInfoResource(loginUser.getId());
         if(resource == null) {
-            return JsonResult.notFound("userInfo was not found", null);
+            return JsonResult.notFound("未找到当前用户信息", null);
         }
         return JsonResult.ok(resource);
     }
@@ -55,11 +55,11 @@ public class UserInfoController {
         UserInfo userInfo = userInfoService.getUserInfoByUserId(loginUser.getId());
 
         if (userInfo == null) {
-            return JsonResult.notFound("userInfo was not found", null);
+            return JsonResult.notFound("未找到当前用户信息", null);
         }
         int result = userInfoService.updateUserInfo(userInfo, resource);
         if (result == -1) {
-            return JsonResult.forbidden("you have no permission to modify userInfo", null);
+            return JsonResult.forbidden("更新用户信息失败", null);
         }
         return JsonResult.noContent().build();
     }
@@ -82,17 +82,17 @@ public class UserInfoController {
             url = userInfoService.saveAvatarFile(file);
         } catch (IOException e) {
             e.printStackTrace();
-            return JsonResult.internalServerError("Failed to upload file", null);
+            return JsonResult.internalServerError("上传文件失败", null);
         }
 
         User loginUser = SecurityUtils.getLoginUser(User.class);
         UserInfo userInfo = userInfoService.getUserInfoByUserId(loginUser.getId());
         if(userInfo == null) {
-            return JsonResult.notFound("userInfo was not found", null);
+            return JsonResult.notFound("未找到当前用户信息", null);
         }
         int result = userInfoService.updateAvatarUrl(userInfo, url);
         if(result == -1) {
-            return JsonResult.forbidden("you have no permission to modify avatar", null);
+            return JsonResult.forbidden("更新用户头像失败", null);
         }
         return JsonResult.ok(url);
 
