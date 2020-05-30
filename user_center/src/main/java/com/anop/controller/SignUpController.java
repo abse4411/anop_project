@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Date;
 
@@ -23,19 +24,30 @@ public class SignUpController {
     @Autowired
     SignUpService signUpService;
 
+    private static final String VALID_TIME = "validTime";
+    private static final int INTERVAL_TIME_MAX = 60;
+
     @ApiOperation(value = "验证邮箱并发送验证码")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "resource", value = "验证邮箱参数", required = true, dataType = "ValidEmailResource")
     })
     @ApiResponses({
             @ApiResponse(code = 204, message = "验证码发送成功", response = Message.class),
-            @ApiResponse(code = 400, message = "该邮箱已被注册", response = Message.class),
+            @ApiResponse(code = 400, message = "验证邮箱发送间隔过短(<60s) / 该邮箱已被注册", response = Message.class),
             @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class),
             @ApiResponse(code = 500, message = "服务器内部错误，发送邮件失败", response = Message.class)
     })
     @PostMapping("valid_email")
-    public Object validEmail(@RequestBody @Valid ValidEmailResource resource) {
+    public Object validEmail(@RequestBody @Valid ValidEmailResource resource, HttpSession session) {
 
+        Date now = new Date();
+        if(session.getAttribute(VALID_TIME) != null) {
+            Date validTime = (Date) session.getAttribute(VALID_TIME);
+            int intervalSeconds = (int)(now.getTime() - validTime.getTime()) / 1000;
+            if(intervalSeconds < INTERVAL_TIME_MAX) {
+                return JsonResult.badRequest("再过 " + (INTERVAL_TIME_MAX-intervalSeconds) + " 秒后才能重新发送验证码", null);
+            }
+        }
         if (signUpService.isSignedUpEmail(resource.getEmail())) {
             return JsonResult.badRequest("该邮箱已被注册", null);
         }
@@ -44,6 +56,9 @@ public class SignUpController {
         } catch (MessagingException e) {
             return JsonResult.internalServerError("邮件发送失败", null);
         }
+
+        session.setAttribute("validTime", now);
+
         return JsonResult.noContent().build();
     }
 
@@ -53,7 +68,7 @@ public class SignUpController {
     })
     @ApiResponses({
             @ApiResponse(code = 204, message = "注册成功", response = Message.class),
-            @ApiResponse(code = 400, message = "邮箱未验证/邮箱已被注册/用户名已被使用/验证码过期/验证码错误", response = Message.class),
+            @ApiResponse(code = 400, message = "邮箱未验证 / 邮箱已被注册 / 用户名已被使用 / 验证码过期 / 验证码错误", response = Message.class),
             @ApiResponse(code = 422, message = "请求体参数验证错误", response = Message.class)
     })
     @PostMapping("signup")

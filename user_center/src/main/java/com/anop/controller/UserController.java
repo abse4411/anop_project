@@ -45,12 +45,12 @@ public class UserController {
 
         User user = SecurityUtils.getLoginUser(User.class);
         if( !userService.isRightOldPassword(resource.getOldPassword()) ) {
-            return JsonResult.badRequest("The old password is incorrect", null);
+            return JsonResult.badRequest("旧密码输入错误", null);
         }
 
         int result = userService.resetPassword(resource.getNewPassword());
         if(result == -1) {
-            return JsonResult.internalServerError("Failed to update password", null);
+            return JsonResult.internalServerError("更新密码失败", null);
         }
         return JsonResult.noContent().build();
     }
