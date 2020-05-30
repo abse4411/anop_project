@@ -1,17 +1,20 @@
 package com.anop;
 
-import com.github.pagehelper.PageInfo;
 import com.anop.pojo.Notification;
 import com.anop.resource.*;
 import com.anop.service.NotificationService;
+import com.anop.service.TodoRemoteService;
 import com.anop.util.test.MockUtils;
+import com.github.pagehelper.PageInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +23,15 @@ import java.util.List;
 @SpringBootTest
 public class NotificationServiceTest {
     Logger logger = LoggerFactory.getLogger(NotificationServiceTest.class);
+    @MockBean
+    TodoRemoteService todoRemoteService;
     @Autowired
     NotificationService notificationService;
 
     @BeforeEach
     void mockLoginUser() {
         MockUtils.mockLoginUser("user");
+
     }
 
     @Test
@@ -76,13 +82,15 @@ public class NotificationServiceTest {
         GroupUnreadNotificationCountResource resource = notificationService.countGroupUnreadNotification(9);
         Assertions.assertNotNull(resource, "用户作为普通成员无法获取对于普通成员的通知群组未读通知数");
 
+        int result;
         Notification notification1 = new Notification();
         notification1.setGroupId(8);
         notification1.setId(9);
+        Mockito.when(todoRemoteService.addTodosBatch(Mockito.any(TodoBatchAddResource.class))).thenReturn(Mockito.anyString());
         NotificationAddResource resource2 = new NotificationAddResource();
         resource2.setContent("121");
         resource2.setTitle("231");
-        int result = notificationService.addNotification(resource2, 1);
+        result = notificationService.addNotification(resource2, 8);
         Assertions.assertTrue(result > 0, "用户是管理员或者群主却无法发布通知");
         NotificationUpdateResource resource1 = new NotificationUpdateResource();
         resource1.setContent("123");
@@ -90,9 +98,10 @@ public class NotificationServiceTest {
         Assertions.assertTrue(result > 0, "用户是管理员或者群主却无法更新通知");
         result = notificationService.deleteNotification(notification1);
         Assertions.assertTrue(result > 0, "用户是管理员或者群主却无法删除通知");
+        Mockito.when(todoRemoteService.addTodo(Mockito.any(TodoAddResource.class))).thenReturn(Mockito.anyString());
         notification1 = notificationService.getNotification(17, 9);
         result = notificationService.asTodo(notification1);
-        Assertions.assertTrue(result > 0, "用户不是普通成员却无法将通知转化为待办事项");
+        Assertions.assertTrue(result > 0, "用户是普通成员却无法将通知转化为待办事项");
     }
 
 }
