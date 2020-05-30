@@ -70,11 +70,11 @@ public class TodoController {
         Todo todo = todoService.getTodo(id);
 
         if (todo == null) {
-            return JsonResult.notFound("todoItem was not found", null);
+            return JsonResult.notFound("没有找到此待办事项", null);
         }
         int result = todoService.updateTodo(todo, resource);
         if (result == -1) {
-            return JsonResult.forbidden("you have no permission to modify this todoitem", null);
+            return JsonResult.forbidden("没有权限访问此待办事项", null);
         }
         return JsonResult.noContent().build();
     }
@@ -93,11 +93,11 @@ public class TodoController {
     public Object checkTodo(@PathVariable int id, @Valid TodoFlagResource resource) {
         Todo todo = todoService.getTodo(id);
         if (todo == null) {
-            return JsonResult.notFound("todoItem was not found", null);
+            return JsonResult.notFound("没有找到此待办事项", null);
         }
         int result = todoService.checkTodo(todo, resource);
         if (result == -1) {
-            return JsonResult.forbidden("you have no permission to check this todoitem", null);
+            return JsonResult.forbidden("没有权限访问此待办事项", null);
         }
         return JsonResult.noContent().build();
     }
@@ -115,11 +115,11 @@ public class TodoController {
     public Object deleteTodo(@PathVariable int id) {
         Todo todo = todoService.getTodo(id);
         if (todo == null) {
-            return JsonResult.notFound("todoItem was not found", null);
+            return JsonResult.notFound("没有找到此待办事项", null);
         }
         int result = todoService.deleteTodo(todo);
         if (result == -1) {
-            return JsonResult.forbidden("you have no permission to delete this todoitem", null);
+            return JsonResult.forbidden("没有权限访问此待办事项", null);
         }
         return JsonResult.noContent().build();
     }
@@ -137,10 +137,10 @@ public class TodoController {
     public Object getTodo(@PathVariable int id) {
         Todo todo = todoService.getTodo(id);
         if (todo == null) {
-            return JsonResult.notFound("todoItem was not found", null);
+            return JsonResult.notFound("没有找到此待办事项", null);
         }
         if (!todo.getUserId().equals(SecurityUtils.getLoginUser(User.class).getId())) {
-            return JsonResult.forbidden("you have no permission to get this todoitem", null);
+            return JsonResult.forbidden("没有权限访问此待办事项", null);
         }
         return JsonResult.ok(todo);
     }

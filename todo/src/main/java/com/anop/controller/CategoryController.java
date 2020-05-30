@@ -71,10 +71,10 @@ public class CategoryController {
     public Object getCategories(@PathVariable int id) {
         Category category = categoryService.getCategory(id);
         if (category == null) {
-            return JsonResult.notFound("category was not found", null);
+            return JsonResult.notFound("没有找到此分类", null);
         }
         if (!category.getUserId().equals(SecurityUtils.getLoginUser(User.class).getId())) {
-            return JsonResult.forbidden("you have no permission to get this category", null);
+            return JsonResult.forbidden("没有权限访问此分类", null);
         }
         return JsonResult.ok(category);
     }
@@ -92,11 +92,11 @@ public class CategoryController {
             @RequestBody @Valid CategoryUpdateResource resource) {
         Category category = categoryService.getCategory(id);
         if (category == null) {
-            return JsonResult.notFound("category was not found", null);
+            return JsonResult.notFound("没有找到此分类", null);
         }
         int result = categoryService.updateCategory(category, resource);
         if (result == -1) {
-            return JsonResult.forbidden("you have no permission to modify this category", null);
+            return JsonResult.forbidden("没有权限访问此分类", null);
         }
         return JsonResult.noContent().build();
     }
@@ -111,11 +111,11 @@ public class CategoryController {
     public Object deleteCategories(@PathVariable int id) {
         Category category = categoryService.getCategory(id);
         if (category == null) {
-            return JsonResult.notFound("category was not found", null);
+            return JsonResult.notFound("没有找到此分类", null);
         }
         int result = categoryService.deleteCategory(id);
         if (result == -1) {
-            return JsonResult.forbidden("you have no permission to delete this category", null);
+            return JsonResult.forbidden("没有权限访问此分类", null);
         }
         return JsonResult.noContent().build();
     }
@@ -134,10 +134,10 @@ public class CategoryController {
     public Object getTodoByCategoryId(@Valid TodoSearchResource searchResource, @PathVariable int categoryId, @Valid PageParmResource page) {
         Category category = categoryService.getCategory(categoryId);
         if (category == null) {
-            return JsonResult.notFound("category was not found", null);
+            return JsonResult.notFound("没有找到此分类", null);
         }
         if (!category.getUserId().equals(SecurityUtils.getLoginUser(User.class).getId())) {
-            return JsonResult.forbidden("you have no permission to get the todos of this category", null);
+            return JsonResult.forbidden("没有权限访问此分类", null);
         }
         return JsonResult.ok(categoryService.listTodoByCategoryId(categoryId, page, searchResource));
     }
