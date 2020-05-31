@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 登录用户查询服务
+ *
+ * @author Xue_Feng
+ */
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
@@ -29,7 +34,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException(userName);
         }
-
         return user;
     }
 }
