@@ -11,7 +11,7 @@
  Target Server Version : 100410
  File Encoding         : 65001
 
- Date: 27/05/2020 17:39:33
+ Date: 31/05/2020 16:45:25
 */
 
 SET NAMES utf8mb4;
@@ -31,7 +31,7 @@ CREATE TABLE `noti_group`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_user_noti_group` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of noti_group
@@ -41,7 +41,7 @@ INSERT INTO `noti_group` VALUES (4, 1, '47', 'Aaa按视aaa', '2020-04-15 13:30:5
 INSERT INTO `noti_group` VALUES (5, 1, '共同', '131趣味请问3', '2020-04-15 13:31:41', 2);
 INSERT INTO `noti_group` VALUES (6, 1, '2无情', '1趣味请问313', '2020-04-15 13:33:36', 1);
 INSERT INTO `noti_group` VALUES (7, 1, '拒绝', '趣味无穷', '2020-04-15 13:39:07', 2);
-INSERT INTO `noti_group` VALUES (8, 2, '213速度', '撒打算', '2020-04-15 22:14:18', 2);
+INSERT INTO `noti_group` VALUES (8, 2, '213速度', '撒打算', '2020-04-15 22:14:18', 0);
 INSERT INTO `noti_group` VALUES (9, 1, ' ', '1212', '2020-04-15 16:13:15', 1);
 INSERT INTO `noti_group` VALUES (10, 1, ' ', '1212', '2020-04-15 16:15:26', 0);
 INSERT INTO `noti_group` VALUES (14, 1, ' ', '52强强强强强强强强强强强强强强782', '2020-04-16 18:36:23', 0);
@@ -62,7 +62,7 @@ CREATE TABLE `noti_group_user`  (
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_noti_group_noti_group_user` FOREIGN KEY (`group_id`) REFERENCES `noti_group` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_noti_group_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of noti_group_user
@@ -90,7 +90,7 @@ CREATE TABLE `noti_receiver`  (
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_noti_group_user_noti_receiver` FOREIGN KEY (`user_id`) REFERENCES `noti_group_user` (`user_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_notification_noti_receiver` FOREIGN KEY (`notification_id`) REFERENCES `notification` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of noti_receiver
@@ -114,13 +114,13 @@ CREATE TABLE `noti_user_request`  (
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_noti_group_noti_user_request` FOREIGN KEY (`group_id`) REFERENCES `noti_group` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_noti_user_request` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of noti_user_request
 -- ----------------------------
-INSERT INTO `noti_user_request` VALUES (1, 1, 3, 0, '2020-04-08 16:26:58');
-INSERT INTO `noti_user_request` VALUES (2, 1, 4, 0, '2020-04-08 16:41:59');
+INSERT INTO `noti_user_request` VALUES (1, 1, 5, 0, '2020-04-08 16:26:58');
+INSERT INTO `noti_user_request` VALUES (2, 8, 6, 0, '2020-04-08 16:41:59');
 INSERT INTO `noti_user_request` VALUES (3, 8, 2, 0, '2020-04-16 21:28:00');
 INSERT INTO `noti_user_request` VALUES (6, 8, 3, 0, '2020-04-17 23:17:49');
 INSERT INTO `noti_user_request` VALUES (9, 9, 3, 1, '2020-04-17 00:44:52');
@@ -144,7 +144,7 @@ CREATE TABLE `notification`  (
   INDEX `idx_user_id`(`user_id`) USING BTREE,
   CONSTRAINT `fk_noti_group_notification` FOREIGN KEY (`group_id`) REFERENCES `noti_group` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `fk_user_notification` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of notification
