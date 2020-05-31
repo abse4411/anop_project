@@ -35,7 +35,6 @@ import java.util.UUID;
 @EnableDiscoveryClient
 @EnableFeignClients
 @MapperScan("com.anop.mapper")
-@RestController
 public class TodoApplication {
     private static final Logger logger= LoggerFactory.getLogger(TodoApplication.class);
 
