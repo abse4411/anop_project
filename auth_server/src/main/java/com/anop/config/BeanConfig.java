@@ -5,6 +5,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.DigestUtils;
 
+/**
+ * Bean配置
+ *
+ * @author Xue_Feng
+ */
 @Configuration
 public class BeanConfig {
 

@@ -9,11 +9,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @EnableEurekaClient
@@ -23,20 +22,6 @@ public class AuthServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AuthServerApplication.class, args);
-    }
-
-    @GetMapping("/hello3")
-    public JsonResult hello(@RequestParam(name = "name") String name) {
-        return JsonResult.notFound("Hello" + name + "world!-AuthApplication", null);
-
-    }
-
-    @PostMapping("/hello4")
-    public Object hello2(@RequestBody() @Valid @NotNull String name, BindingResult bindingResult) {
-        if (bindingResult.hasErrors() || bindingResult.hasFieldErrors()) {
-            return "Error";
-        }
-        return JsonResult.ok(new User());
     }
 
     @RequestMapping(path = "/user", method = {RequestMethod.GET, RequestMethod.POST})
@@ -49,11 +34,6 @@ public class AuthServerApplication {
     @PostMapping(path = "/failed")
     public Object failed() {
         return JsonResult.unauthorized("用户名或者密码错误", null);
-    }
-
-    @PostMapping(path = "/test")
-    public Object test() {
-        return JsonResult.noContent().build();
     }
 }
 
