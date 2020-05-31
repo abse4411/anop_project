@@ -1,12 +1,12 @@
 package com.anop;
 
-import com.github.pagehelper.PageInfo;
 import com.anop.pojo.UserRequest;
 import com.anop.resource.PageParmResource;
 import com.anop.resource.UserRequestAddResource;
 import com.anop.resource.UserRequestResource;
 import com.anop.service.UserRequestService;
 import com.anop.util.test.MockUtils;
+import com.github.pagehelper.PageInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,27 +39,27 @@ public class UserRequestServiceTest {
         resource.setGroupId(99);
 
         int result = userRequestService.addUserRequest(resource);
-        Assertions.assertEquals(badResult, result, "通知群组不存在，却可申请加入群");
+        Assertions.assertTrue(result <= badResult, "通知群组不存在，却可申请加入群");
         resource.setGroupId(1);
         result = userRequestService.addUserRequest(resource);
-        Assertions.assertEquals(badResult, result, "用户已在群内，却可申请加入群");
+        Assertions.assertTrue(result <= badResult, "用户已在群内，却可申请加入群");
         resource.setGroupId(5);
         result = userRequestService.addUserRequest(resource);
-        Assertions.assertEquals(badResult, result, "该群不允许任何人加入，却可申请加入群");
+        Assertions.assertTrue(result <= badResult, "该群不允许任何人加入，却可申请加入群");
 
         UserRequest request = new UserRequest();
         request.setId(11);
         request.setUserId(4);
         request.setGroupId(9);
         request.setIsAccepted((byte) 1);
-        userRequestService.acceptOrDenyUserRequest(request, (byte) 1);
-        Assertions.assertEquals(badResult, result, "申请已被处理，却可以再次处理");
+        result = userRequestService.acceptOrDenyUserRequest(request, (byte) 1);
+        Assertions.assertTrue(result <= badResult, "申请已被处理，却可以再次处理");
         request.setIsAccepted((byte) 0);
-        userRequestService.acceptOrDenyUserRequest(request, (byte) 3);
-        Assertions.assertEquals(badResult, result, "无效的isAccepted，却可以再次处理");
+        result = userRequestService.acceptOrDenyUserRequest(request, (byte) 3);
+        Assertions.assertTrue(result <= badResult, "无效的isAccepted，却可以再次处理");
         request.setIsAccepted((byte) 0);
-        userRequestService.acceptOrDenyUserRequest(request, (byte) 1);
-        Assertions.assertEquals(badResult, result, "用户不是该群管理员或者群主，却可以处理申请");
+        result = userRequestService.acceptOrDenyUserRequest(request, (byte) 1);
+        Assertions.assertTrue(result <= badResult, "用户不是该群管理员或者群主，却可以处理申请");
 
     }
 
@@ -72,10 +72,10 @@ public class UserRequestServiceTest {
 
         PageInfo<List<UserRequestResource>> listPageInfo = userRequestService.listUserRequest(new PageParmResource());
         Assertions.assertNotNull(listPageInfo, "无法获取用户创建的群组的加入申请");
-        Assertions.assertEquals(2, listPageInfo.getList().size(), "无法获取用户创建的群组的加入申请");
+        Assertions.assertEquals(3, listPageInfo.getList().size(), "无法获取用户创建的群组的加入申请");
         userRequestService.listManageUserRequest(new PageParmResource());
         Assertions.assertNotNull(listPageInfo, "无法用户获取管理的群组的加入申请");
-        Assertions.assertEquals(2, listPageInfo.getList().size(), "无法获取用户管理的群组的加入申请");
+        Assertions.assertEquals(3, listPageInfo.getList().size(), "无法获取用户管理的群组的加入申请");
 
         UserRequestAddResource resource = new UserRequestAddResource();
         resource.setGroupId(6);
@@ -98,9 +98,6 @@ public class UserRequestServiceTest {
         Assertions.assertTrue(result > 0, "用户作为群管理员或者群组无法审核该群加入申请");
         request = userRequestService.getUserRequest(1);
         result = userRequestService.acceptOrDenyUserRequest(request, (byte) 2);
-        Assertions.assertTrue(result > 0, "用户作为群管理员或者群组无法审核该群加入申请");
-        request = userRequestService.getUserRequest(6);
-        result = userRequestService.acceptOrDenyUserRequest(request, (byte) 1);
         Assertions.assertTrue(result > 0, "用户作为群管理员或者群组无法审核该群加入申请");
 
     }
