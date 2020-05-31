@@ -83,7 +83,6 @@ public class GroupController {
     @ApiOperation(value = "更新指定通知群组")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "id", value = "通知群组群号", required = true, dataType = "int"),
-        @ApiImplicitParam(name = "GroupUpdateResource", value = "更新通知群组参数", required = true, dataType = "GroupUpdateResource"),
     })
     @ApiResponses({
         @ApiResponse(code = 204, message = "更新成功"),
