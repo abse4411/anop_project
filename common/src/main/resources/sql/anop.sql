@@ -11,7 +11,7 @@
  Target Server Version : 100410
  File Encoding         : 65001
 
- Date: 31/05/2020 16:45:25
+ Date: 31/05/2020 16:45:250
 */
 
 SET NAMES utf8mb4;
@@ -360,7 +360,7 @@ INSERT INTO `valid_email` VALUES (4, '213123', '54321', '2020-04-27 10:10:00', 1
 INSERT INTO `valid_email` VALUES (5, 'shenzhifeng@qq.com', 'A1B2C', '2020-04-27 23:59:59', 1);
 INSERT INTO `valid_email` VALUES (6, 'zhangyifan@qq.com', 'B2C3D', '2020-04-27 23:59:59', 1);
 INSERT INTO `valid_email` VALUES (7, 'zhaoweinan@qq.com', 'C3D4E', '2020-04-27 23:59:59', 1);
-INSERT INTO `valid_email` VALUES (8, 'test1@qq.com', 'ABCDE', '2020-05-30 23:59:59', 0);
+INSERT INTO `valid_email` VALUES (8, 'test1@qq.com', 'ABCDE', '2020-06-30 23:59:59', 0);
 INSERT INTO `valid_email` VALUES (9, 'test2@qq.com', '12345', '2020-01-01 23:59:59', 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
