@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class FeignAuthRequestInterceptor implements RequestInterceptor {
     private static final String XSRF_TOKEN_HEADER_NAME = "X-XSRF-TOKEN";
+    private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
     private static final String COOKIE_HEADER_NAME = "Cookie";
     private final Logger logger = LoggerFactory.getLogger(FeignAuthRequestInterceptor.class);
 
@@ -33,7 +34,7 @@ public class FeignAuthRequestInterceptor implements RequestInterceptor {
             for (int i = 0; i < cks.length; i++) {
                 cookies.add(cks[i].getName() + "=" + cks[i].getValue());
                 logger.info("cookie found:{}", cks[i].getName());
-                if (!cks[i].getName().equals(XSRF_TOKEN_HEADER_NAME)) {
+                if (!cks[i].getName().equals(XSRF_TOKEN_COOKIE_NAME)) {
                     requestTemplate.header(XSRF_TOKEN_HEADER_NAME, cks[i].getValue());
                 }
             }
