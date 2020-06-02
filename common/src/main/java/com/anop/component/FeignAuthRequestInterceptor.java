@@ -34,7 +34,7 @@ public class FeignAuthRequestInterceptor implements RequestInterceptor {
             for (int i = 0; i < cks.length; i++) {
                 cookies.add(cks[i].getName() + "=" + cks[i].getValue());
                 logger.info("cookie found:{}", cks[i].getName());
-                if (!cks[i].getName().equals(XSRF_TOKEN_COOKIE_NAME)) {
+                if (cks[i].getName().equals(XSRF_TOKEN_COOKIE_NAME)) {
                     requestTemplate.header(XSRF_TOKEN_HEADER_NAME, cks[i].getValue());
                 }
             }
