@@ -43,7 +43,7 @@ public class UserRequestController {
                     errorMsg = "通知群组不存在";
                     break;
                 case -2:
-                    errorMsg = "申请者已在将在该通知群组中";
+                    errorMsg = "申请者已在该通知群组中";
                     break;
                 case -3:
                     errorMsg = "该通知群组不允许任何人加入";
@@ -105,7 +105,7 @@ public class UserRequestController {
                     errorMsg = "通知群组的创建者或管理员才可以审核加入申请";
                     break;
                 case -3:
-                    errorMsg = "申请者已在在该通知群组中";
+                    errorMsg = "申请者已在该通知群组中";
                     break;
                 case -4:
                     errorMsg = "该通知群组不允许任何人加入";
