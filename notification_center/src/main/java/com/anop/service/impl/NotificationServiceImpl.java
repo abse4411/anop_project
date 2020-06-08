@@ -147,8 +147,9 @@ public class NotificationServiceImpl implements NotificationService {
         ReceiverExample example = new ReceiverExample();
         ReceiverExample.Criteria criteria = example.createCriteria();
         criteria.andNotificationIdEqualTo(oldNotification.getId());
+        criteria.andIsReadEqualTo(READ);
         Receiver receiver = new Receiver();
-        receiver.setIsRead(READ);
+        receiver.setIsRead(UNREAD);
         receiverMapper.updateByExampleSelective(receiver, example);
 
         Notification newNotification = PropertyMapperUtils.map(resource, Notification.class);
