@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anop.mapper.RemindMailMapper">
+    <resultMap id="BaseResultMap" type="com.anop.pojo.RemindEmailDetail">
+        <id property="id" jdbcType="INTEGER" column="id"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <collection property="todosToRemind" ofType="com.anop.resource.MailTodoResource" column="id"
+                    select="com.anop.mapper.CustomTodoMapper.selectByUserId"/>
+    </resultMap>
+    <select id="selectRemindMailDetails" resultMap="BaseResultMap">
+        SELECT DISTINCT `user`.id, `user`.`email`, `user`.`username`
+        FROM `user`,
+             todo
+        WHERE todo.user_id = `user`.id
+          AND todo.is_completed = 0
+          AND `todo`.`remind_date` &lt;= NOW()
+          AND `todo`.`remind_date` &gt; (date_sub(now(), interval 1 hour));
+
+    </select>
+</mapper>
+D
